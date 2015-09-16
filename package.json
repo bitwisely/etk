@@ -1,0 +1,31 @@
+{
+  "name": "etk",
+  "version": "0.0.1",
+  "description": "Elastic search tool kit. See README for details.",
+  "keywords": [
+    "Elasticsearch",
+    "Elastic",
+    "Search",
+    "Tool Kit"
+  ],
+  "author": "R. Saltuk Alakus <saltukalakus@gmail.com>",
+  "main": "index.js",
+  "dependencies": {
+    "esq": 0.x.x
+  },
+  "scripts": {
+    "etk": "nodejs index.js"
+  },
+  "devDependencies": {
+    "browserify": "latest",
+    "gulp": "latest",
+    "gulp-jshint": "latest",
+    "gulp-browserify": "latest",
+    "tape": "latest",
+    "elasticsearch": 8.x.x
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/saltukalakus/etk.git"
+  }
+}
