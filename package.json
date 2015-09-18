@@ -21,6 +21,7 @@
     "gulp-browserify": "latest",
     "gulp-shell": "latest",
     "gulp-replace": "latest",
+    "gulp-markdown": "latest",
     "tape": "latest",
     "docco": "latest",
     "jsdoc": "latest",

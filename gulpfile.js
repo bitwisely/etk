@@ -1,8 +1,10 @@
+var fs = require('fs');
 var gulp = require('gulp');
 var jshint = require('gulp-jshint');
 var browserify = require('gulp-browserify');
 var shell = require('gulp-shell');
 var replace = require('gulp-replace');
+var markdown = require('gulp-markdown');
 
 gulp.task('jshint', function () {
     gulp.src('./*.js')
@@ -32,8 +34,16 @@ gulp.task('annotate_document', shell.task([
     './node_modules/docco/bin/docco index.js'
 ]));
 
+// Convert markdown to html for README.md
+gulp.task('index_markdown_2_html', function () {
+    return gulp.src('README.md')
+        .pipe(markdown())
+        .pipe(gulp.dest('.'));
+});
+
 // Document main web site patches
-gulp.task('patch_index_html_document', ['api_document'], function(){
+gulp.task('patch_index_html_document', ['api_document', 'index_markdown_2_html'], function(){
+    var data = fs.readFileSync('README.html');
     gulp.src(['out/index.html'])
         .pipe(replace("</body>\n</html>",
                 "<style> .type-signature { font-size:50px;} .page-title {display: none;}</style>" +
@@ -42,7 +52,11 @@ gulp.task('patch_index_html_document', ['api_document'], function(){
                 "function(){$('#toc').hide();}," +
                 "false, true);});" +
                 "</script>" +
-                "</body>\n</html>"))
+                "</body>\n</html>"
+        ))
+        .pipe(replace('<div class="clearfix"></div>',
+            '<div class="clearfix"></div>' + data
+        ))
         .pipe(replace("Global", "API"))
         .pipe(gulp.dest('out'));
 });
