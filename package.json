@@ -22,6 +22,7 @@
     "gulp-shell": "latest",
     "gulp-replace": "latest",
     "gulp-markdown": "latest",
+    "gulp-gh-pages": "latest",
     "tape": "latest",
     "docco": "latest",
     "jsdoc": "latest",

@@ -5,6 +5,7 @@ var browserify = require('gulp-browserify');
 var shell = require('gulp-shell');
 var replace = require('gulp-replace');
 var markdown = require('gulp-markdown');
+var ghPages = require('gulp-gh-pages');
 
 gulp.task('jshint', function () {
     gulp.src('./*.js')
@@ -77,11 +78,19 @@ gulp.task('patch_api_document', ['patch_index_html_document'], function(){
         .pipe(gulp.dest('out'));
 });
 
+// Copy addition files for project site
 gulp.task('patch_files_copy', ['patch_api_document'], shell.task([
     'cp ./confs/jsdoc/jquery-watch-element.js ./out/scripts'
 ]));
 
+// Entry point to generate the docs/API web site.
 gulp.task('document', ['patch_files_copy']);
+
+// Deploy web site to GitHub
+gulp.task('deploy', function() {
+    return gulp.src('./out/**/*')
+        .pipe(ghPages());
+});
 
 gulp.task('watch', function () {
     gulp.watch('./*.js', ['jshint']);
