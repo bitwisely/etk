@@ -13,10 +13,10 @@
     "default": {
         "outputSourceFiles": true
     },
-    "systemName"      : "DocStrap",
-    "footer"          : "",
-    "copyright"       : "DocStrap Copyright © 2012-2013 The contributors to the JSDoc3 and DocStrap projects.",
-    "navType"         : "vertical",
+    "systemName"      : "Elastic Tool Kit",
+    "footer"          : "<style> .type-signature { font-size:50px;} .page-title {display: none;}</style><script type='text/javascript' src='//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js'></script><script type='text/javascript' src='scripts/jquery-watch-elemet.js'></script><script>$( document ).ready(function(){$('.toc-h1').waitUntilExists(function(){$('.toc-h1').hide()}, false, true);});</script>",
+    "copyright"       : "Elastic Tool Kit Copyright © 2015 R. Saltuk Alakus",
+    "navType"         : "inline",
     "theme"           : "cerulean",
     "linenums"        : true,
     "collapseSymbols" : false,
