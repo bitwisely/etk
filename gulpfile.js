@@ -32,8 +32,23 @@ gulp.task('annotate_document', shell.task([
     './node_modules/docco/bin/docco index.js'
 ]));
 
+// Document main web site patches
+gulp.task('patch_index_html_document', ['api_document'], function(){
+    gulp.src(['out/index.html'])
+        .pipe(replace("</body>\n</html>",
+                "<style> .type-signature { font-size:50px;} .page-title {display: none;}</style>" +
+                "<script type='text/javascript' src='scripts/jquery-watch-element.js'></script>" +
+                "<script>$( document ).ready(function(){$('.toc-h1').waitUntilExists(" +
+                "function(){$('#toc').hide();}," +
+                "false, true);});" +
+                "</script>" +
+                "</body>\n</html>"))
+        .pipe(replace("Global", "API"))
+        .pipe(gulp.dest('out'));
+});
+
 // Document api web site patches
-gulp.task('patch_api_document', ['api_document'], function(){
+gulp.task('patch_api_document', ['patch_index_html_document'], function(){
     gulp.src(['out/global.html'])
         .pipe(replace("</body>\n</html>",
             "<style> .type-signature { font-size:50px;} .page-title {display: none;}</style>" +
@@ -44,14 +59,15 @@ gulp.task('patch_api_document', ['api_document'], function(){
                 "false, true);});" +
             "</script>" +
             "</body>\n</html>"))
+        .pipe(replace("Global", "API"))
         .pipe(gulp.dest('out'));
 });
 
-gulp.task('patch_files_copy', ['api_document'], shell.task([
+gulp.task('patch_files_copy', ['patch_api_document'], shell.task([
     'cp ./confs/jsdoc/jquery-watch-element.js ./out/scripts'
 ]));
 
-gulp.task('document', ['annotate_document', 'patch_api_document', 'patch_files_copy']);
+gulp.task('document', ['patch_files_copy']);
 
 gulp.task('watch', function () {
     gulp.watch('./*.js', ['jshint']);
