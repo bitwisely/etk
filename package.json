@@ -1,7 +1,10 @@
 {
   "name": "etk",
-  "version": "0.0.2",
-  "description": "Elastic search tool kit. See README for details.",
+  "version": "0.0.3",
+  "description": "Elastic search tool kit.",
+  "license": "MIT",
+  "repository": "saltukalakus/etk",
+  "homepage": "http://saltukalakus.github.io/etk/",
   "keywords": [
     "Elasticsearch",
     "Tool Kit"
