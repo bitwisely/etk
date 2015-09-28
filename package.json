@@ -12,7 +12,8 @@
     "esq": "0.x.x"
   },
   "scripts": {
-    "etk": "nodejs index.js"
+    "etk": "nodejs index.js",
+    "test": "gulp lint"
   },
   "devDependencies": {
     "browserify": "latest",

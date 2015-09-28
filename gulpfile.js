@@ -7,7 +7,7 @@ var replace = require('gulp-replace');
 var markdown = require('gulp-markdown');
 var ghPages = require('gulp-gh-pages');
 
-gulp.task('jshint', function () {
+gulp.task('lint', function () {
     gulp.src('./*.js')
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
@@ -20,14 +20,15 @@ gulp.task('jsbuild', function() {
             insertGlobals : true,
             debug : !gulp.env.production
         }))
-        .pipe(gulp.dest('./public/build'))
+        .pipe(gulp.dest('./public/build'));
 });
 
 // Document the API
 gulp.task('api_document', shell.task([
     'cp ./confs/jsdoc/jsdoc-conf.json ./node_modules/jsdoc/conf.json',
-    './node_modules/jsdoc/jsdoc.js index.js \
-     -t ./node_modules/ink-docstrap/template \
+    /*jshint multistr: true */
+    './node_modules/jsdoc/jsdoc.js index.js\
+     -t ./node_modules/ink-docstrap/template\
      -c ./node_modules/jsdoc/conf.json'
 ]));
 
@@ -93,6 +94,6 @@ gulp.task('deploy', function() {
 });
 
 gulp.task('watch', function () {
-    gulp.watch('./*.js', ['jshint']);
+    gulp.watch('./*.js', ['lint']);
     gulp.watch('./*.js', ['jsbuild']);
 });
