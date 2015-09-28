@@ -25,6 +25,7 @@
     "gulp-markdown": "latest",
     "gulp-gh-pages": "latest",
     "gulp-tape": "latest",
+    "tape": "latest",
     "tap-colorize": "latest",
     "docco": "latest",
     "jsdoc": "latest",
