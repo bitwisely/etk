@@ -13,7 +13,7 @@
   },
   "scripts": {
     "etk": "nodejs index.js",
-    "test": "gulp lint"
+    "test": "gulp lint; gulp test;"
   },
   "devDependencies": {
     "browserify": "latest",
@@ -24,7 +24,8 @@
     "gulp-replace": "latest",
     "gulp-markdown": "latest",
     "gulp-gh-pages": "latest",
-    "tape": "latest",
+    "gulp-tape": "latest",
+    "tap-colorize": "latest",
     "docco": "latest",
     "jsdoc": "latest",
     "ink-docstrap": "latest",

@@ -6,6 +6,15 @@ var shell = require('gulp-shell');
 var replace = require('gulp-replace');
 var markdown = require('gulp-markdown');
 var ghPages = require('gulp-gh-pages');
+var tape = require('gulp-tape');
+var tapColorize = require('tap-colorize');
+
+gulp.task('test', function() {
+    return gulp.src('tests/*.js')
+        .pipe(tape({
+            reporter: tapColorize()
+        }));
+});
 
 gulp.task('lint', function () {
     gulp.src('./*.js')
