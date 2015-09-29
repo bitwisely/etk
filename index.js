@@ -1,6 +1,6 @@
 
 Esq = require('esq');
-Module.exports = Etk;
+module.exports = Etk;
 
 function Etk(client, opt) {
     this.client = client;
@@ -22,11 +22,11 @@ function Etk(client, opt) {
          * @param cb Callback function
          */
         search: function (key, value, cb) {
-            var search_text = key + ":" + value;
+            var esq = new Esq();
+            esq.query("query", "filtered", "query", "match", key, value);
+            var query = esq.getQuery();
             this.client.search({
-                index: this.index,
-                type: this.type,
-                body: search_text},
+                body: query},
                 cb);
         },
 
