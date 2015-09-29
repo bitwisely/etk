@@ -63,6 +63,7 @@ gulp.task('patch_index_html_document', ['api_document', 'index_markdown_2_html']
                 "function(){$('#toc').hide();}," +
                 "false, true);});" +
                 "</script>" +
+                '<a href="https://github.com/saltukalakus/etk"><img style="position: fixed; top: 0; left: 0; border: 0; z-index: 999999" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>' +
                 "</body>\n</html>"
         ))
         .pipe(replace('<div class="clearfix"></div>',
@@ -76,13 +77,14 @@ gulp.task('patch_index_html_document', ['api_document', 'index_markdown_2_html']
 gulp.task('patch_api_document', ['patch_index_html_document'], function(){
     gulp.src(['out/global.html'])
         .pipe(replace("</body>\n</html>",
-            "<style> .type-signature { font-size:50px;} .page-title {display: none;}</style>" +
+            "<style> .type-signature { font-size:60px;} .signature {color: orange;} .page-title {display: none;}</style>" +
             "<script type='text/javascript' src='scripts/jquery-watch-element.js'></script>" +
             "<script>$( document ).ready(function(){$('.toc-h1').waitUntilExists(" +
                 "function(){$('.toc-h1').hide(); " +
                 "$('.toc-h2').hide()}, " +
                 "false, true);});" +
             "</script>" +
+            '<a href="https://github.com/saltukalakus/etk"><img style="position: fixed; top: 0; left: 0; border: 0; z-index: 999999" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>' +
             "</body>\n</html>"))
         .pipe(replace("Global", "API"))
         .pipe(gulp.dest('out'));
