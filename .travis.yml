@@ -1,3 +1,10 @@
 language: node_js
 node_js:
   - 0.12
+
+before_install:
+  - sudo service elasticsearch start
+  - sleep 3
+  
+services:
+  - elasticsearch
