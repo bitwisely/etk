@@ -13,9 +13,9 @@
     "default": {
         "outputSourceFiles": true
     },
-    "systemName"      : "Elastic Tool Kit",
+    "systemName"      : "Home",
     "footer"          : "",
-    "copyright"       : "Elastic Tool Kit Copyright © 2015 R. Saltuk Alakus",
+    "copyright"       : "ElasticSearch Tool Kit Copyright © 2015 R. Saltuk Alakus",
     "navType"         : "inline",
     "theme"           : "cerulean",
     "linenums"        : true,

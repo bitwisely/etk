@@ -8,18 +8,20 @@ function Etk(client, opt) {
     this.client.tk = this.client.tk || {
 
         /**
-         * Searches the key-value pair. Return result to the callback
-         * function with a signature of (err obj, response obj)
+         * Searches the key-value pair. Returns result to the callback
+         * function.
          *
          * @example
-         *     elastic = require('elasticsearch');
-         *     client = Etk(elastic, {index: "myindex", type: "mytype"});
-         *     client.tk.search("foo", "bar", function (err, resp) {
-         *        ...
-         *        });
-         * @param key Key to search
-         * @param value Value of the key
-         * @param cb Callback function
+         * elastic = require('elasticsearch');
+         * Etk = require('etk');
+         * var client = elastic.Client({hosts: ['localhost:9200']});
+         * client = Etk(client, {index: "myindex", type: "mytype"});
+         * client.tk.search("foo", "bar", function (err, resp) {
+         *     ...
+         * });
+         * @param key {string} Key to search
+         * @param value {string} Value of the key
+         * @param cb {function} Callback function of signature (err, resp)
          */
         search: function (key, value, cb) {
             var esq = new Esq();
@@ -32,13 +34,12 @@ function Etk(client, opt) {
 
         /**
          * Searches the key-value pair for the last number of days.
-         * Return result to the callback function with with a signature
-         * of (err obj, response obj)
+         * Returns result to the callback function.
          *
-         * @param key Key to search
-         * @param value Value of the key
-         * @param days Number of days back to search
-         * @param cb Callback function
+         * @param key {string} Key to search
+         * @param value {string} Value of the key
+         * @param days {number} Number of days back to search
+         * @param cb {function} Callback function of signature (err, resp)
          */
         searchLastDays: function (key, value, days, cb) {
             var esq = new Esq();
