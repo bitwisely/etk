@@ -19,6 +19,7 @@ function Etk(client, opt) {
          * client.tk.search("foo", "bar", function (err, resp) {
          *     ...
          * });
+         *
          * @param key {string} Key to search
          * @param value {string} Value of the key
          * @param cb {function} Callback function of signature (err, resp)
@@ -36,6 +37,15 @@ function Etk(client, opt) {
          * Searches the key-value pair for the last number of days.
          * Returns result to the callback function.
          *
+         * @example
+         * elastic = require('elasticsearch');
+         * Etk = require('etk');
+         * var client = elastic.Client({hosts: ['localhost:9200']});
+         * client = Etk(client, {index: "myindex", type: "mytype"});
+         * client.tk.searchLastDays("foo", "bar", 10, function (err, resp) {
+         *     ...
+         * });
+         *
          * @param key {string} Key to search
          * @param value {string} Value of the key
          * @param days {number} Number of days back to search
@@ -51,7 +61,7 @@ function Etk(client, opt) {
                 body: query},
                 cb);
         },
-        // Helper function to pack json array compatible with ElasticSearch bulk array
+        // Helper function to pack json array compatible with ElasticSearch bulk array format
         _bulkArray: function(data) {
             var bulk_formed = [];
             for (var i = 0, len = data.length; i < len; i++) {
