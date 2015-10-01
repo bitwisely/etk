@@ -50,32 +50,43 @@ function Etk(client, opt) {
             this.client.search({
                 body: query},
                 cb);
+        },
+        // Helper function to pack json array compatible with ElasticSearch bulk array
+        _bulkArray: function(data) {
+            var bulk_formed = [];
+            for (var i = 0, len = data.length; i < len; i++) {
+                bulk_formed.push({index: {_index:this.index, _type: this.type}});
+                bulk_formed.push(data[i]);
+            }
+            return bulk_formed;
+        },
+        /**
+         * Inserts Json arrays in bulk mode
+         *
+         * @example
+         * elastic = require('elasticsearch');
+         * Etk = require('etk');
+         * var client = elastic.Client({hosts: ['localhost:9200']});
+         * client = Etk(client, {index: "myindex", type: "mytype"});
+         *
+         * var test_array= [{foo:1, bar:2, baz: "John", "@timestamp": new Date().toISOString()},
+         *     {foo:2, bar:4, baz: "Dough", "@timestamp": new Date().toISOString()},
+         *     {foo:0, bar:5, baz: "Jane", "@timestamp": new Date().toISOString()}];
+         *
+         * client.tk.bulkInsert(test_array, function (err, resp) {
+         *     ...
+         * });
+         *
+         * @param data {json} Bulk arbitrary json data
+         * @param cb {function} Callback function of signature (err, resp)
+         */
+        bulkInsert: function(data, cb) {
+            var bulk_body = this._bulkArray(data);
+            console.log(bulk_body);
+            client.bulk({
+                body: bulk_body
+            }, cb);
         }
-        /*
-        ,
-
-        searchBetween: function (key, value, start, end, cb) {
-            var json_data = {"query": {
-                "filtered": {
-                    "query": {
-                        "match": {
-                            "foo": 1
-                        }
-                    },
-
-                    "filter": {
-                        "numeric_range": {
-                            "@timestamp": {
-                                "lt": "2015-06-30",
-                                "gte": "2015-06-01"
-                            }}}
-                }
-            }};
-            this.client.search({
-                    body: json_data},
-                cb);
-        }
-        */
     };
 
     // Store elastic search client for etk use
@@ -86,5 +97,32 @@ function Etk(client, opt) {
     this.client.tk.index = opt.index || "*";
     // Default searches "all" available types
     this.client.tk.type = opt.type || "*";
+    // Return the extended object
     return this.client;
 }
+
+var elasticsearch = require('elasticsearch');
+
+var client = elasticsearch.Client({
+    hosts: [
+        'localhost:9200'
+    ]
+});
+
+var client_1 = new Etk(client, {index: "myindex2", type: "mytype"});
+
+function cb (err, resp) {
+    if (err)
+        console.log("ERR:" + err);
+
+    if (resp)
+        console.log(resp);
+}
+
+(function test_bulk() {
+    var test_array= [{foo:1, bar:2, baz: "John", "@timestamp": new Date().toISOString()},
+        {foo:2, bar:4, baz: "Dough", "@timestamp": new Date().toISOString()},
+        {foo:0, bar:5, baz: "Jane", "@timestamp": new Date().toISOString()}];
+
+    client_1.tk.bulkInsert(test_array, cb);
+})();
