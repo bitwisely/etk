@@ -41,20 +41,20 @@ client_1.tk.search("foo", 1, function (err, resp) {
 */
 
 test("Populate the data set", function(t) {
-    t.assert("Populate the data set failed");
     function cb (err, resp) {
         if (err)
-            console.log("ERR:" + err);
+            t.fail("ERR: " + JSON.stringify(err));
     }
     var test_array= [{foo:1, bar:2, baz: "John", "@timestamp": new Date().toISOString()},
                      {foo:2, bar:4, baz: "Dough", "@timestamp": new Date().toISOString()},
                      {foo:0, bar:5, baz: "Jane", "@timestamp": new Date().toISOString()}];
     client_1.tk.deleteAll(function(err, resp){
         if (err) {
-            t.assert();
+            t.fail("Data set could not be cleared. ERR: " + JSON.stringify(err));
             t.end();
         }
-        client_1.tk.bulkInsert(test_array, cb)});
+        client_1.tk.bulkInsert(test_array, cb)
+    });
     t.end();
 });
 
