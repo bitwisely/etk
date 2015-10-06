@@ -13,7 +13,7 @@
     "default": {
         "outputSourceFiles": true
     },
-    "systemName"      : "Home",
+    "systemName"      : "Etk",
     "footer"          : "",
     "copyright"       : "ElasticSearch Tool Kit Copyright © 2015 R. Saltuk Alakus",
     "navType"         : "inline",
