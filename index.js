@@ -8,7 +8,7 @@ function Etk(client, opt) {
     this.client.tk = this.client.tk || {
 
         /**
-         * Searches the key-value pair. Returns result to the callback
+         * Searches the key-value pair of Etk client. Returns result to the callback
          * function.
          *
          * @example
@@ -29,12 +29,14 @@ function Etk(client, opt) {
             esq.query("query", "filtered", "query", "match", key, value);
             var query = esq.getQuery();
             this.client.search({
+                index: this.index,
+                type: this.type,
                 body: query},
                 cb);
         },
 
         /**
-         * Searches the key-value pair for the last number of days.
+         * Searches the key-value pair for the last number of days of Etk client
          * Returns result to the callback function.
          *
          * @example
@@ -58,6 +60,8 @@ function Etk(client, opt) {
             esq.query("query", "filtered", "filter", "range", this.time_field, "gte", search_days);
             var query = esq.getQuery();
             this.client.search({
+                index: this.index,
+                type: this.type,
                 body: query},
                 cb);
         },
@@ -71,7 +75,7 @@ function Etk(client, opt) {
             return bulk_formed;
         },
         /**
-         * Inserts Json arrays in bulk mode
+         * Inserts Json arrays in bulk mode to the Etk client
          *
          * @example
          * elastic = require('elasticsearch');
@@ -96,6 +100,31 @@ function Etk(client, opt) {
             client.bulk({
                 body: bulk_body
             }, cb);
+        },
+        /**
+         * Delete all items of Etk client
+         *
+         * @example
+         * elastic = require('elasticsearch');
+         * Etk = require('etk');
+         * var client = elastic.Client({hosts: ['localhost:9200']});
+         * client = Etk(client, {index: "myindex", type: "mytype"});
+         *
+         * client.tk.deleteAll(function (err, resp) {
+         *     ...
+         * });
+         *
+         * @param cb {function} Callback function of signature (err, resp)
+         */
+        deleteAll: function(cb) {
+            var esq = new Esq();
+            esq.query("query", "filtered", "query", "match_all", "", "");
+            var query = esq.getQuery();
+            client.deleteByQuery({
+                index: this.index,
+                type: this.type,
+                body: query
+            }, cb );
         }
     };
 
@@ -110,29 +139,3 @@ function Etk(client, opt) {
     // Return the extended object
     return this.client;
 }
-
-var elasticsearch = require('elasticsearch');
-
-var client = elasticsearch.Client({
-    hosts: [
-        'localhost:9200'
-    ]
-});
-
-var client_1 = new Etk(client, {index: "myindex2", type: "mytype"});
-
-function cb (err, resp) {
-    if (err)
-        console.log("ERR:" + err);
-
-    if (resp)
-        console.log(resp);
-}
-
-(function test_bulk() {
-    var test_array= [{foo:1, bar:2, baz: "John", "@timestamp": new Date().toISOString()},
-        {foo:2, bar:4, baz: "Dough", "@timestamp": new Date().toISOString()},
-        {foo:0, bar:5, baz: "Jane", "@timestamp": new Date().toISOString()}];
-
-    client_1.tk.bulkInsert(test_array, cb);
-})();
