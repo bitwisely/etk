@@ -1,9 +1,12 @@
 {
   "name": "etk",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Elastic search tool kit.",
   "license": "MIT",
-  "repository": "saltukalakus/etk",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/saltukalakus/etk.git"
+  },
   "homepage": "http://saltukalakus.github.io/etk/",
   "keywords": [
     "Elasticsearch",
@@ -34,9 +37,5 @@
     "jsdoc": "latest",
     "ink-docstrap": "latest",
     "elasticsearch": "8.x.x"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/saltukalakus/etk.git"
   }
 }
