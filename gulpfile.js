@@ -99,18 +99,10 @@ gulp.task('patch_files_copy', ['patch_api_document'], shell.task([
 gulp.task('document', ['patch_files_copy']);
 
 // Deploy web site to GitHub
-gulp.task('deploy_site', function() {
+gulp.task('deploy', function() {
     return gulp.src('./out/**/*')
         .pipe(ghPages());
 });
-
-gulp.task('publish', shell.task([
-        'npm version patch',
-        'git commit -m "Update Etk version"',
-        'git push',
-        'npm publish'
-        ])
-);
 
 gulp.task('watch', function () {
     gulp.watch('./*.js', ['lint']);
