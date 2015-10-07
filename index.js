@@ -1,5 +1,7 @@
 
 Esq = require('esq');
+_ = require('lodash');
+
 module.exports = Etk;
 
 function Etk(client, opt) {
@@ -96,7 +98,7 @@ function Etk(client, opt) {
          */
         bulkInsert: function(data, cb) {
             var bulk_body = this._bulkArray(data);
-            client.bulk({
+            this.client.bulk({
                 body: bulk_body
             }, cb);
         },
@@ -119,11 +121,38 @@ function Etk(client, opt) {
             var esq = new Esq();
             esq.query("query", "filtered", "query", "match_all", "", "");
             var query = esq.getQuery();
-            client.deleteByQuery({
+            this.client.deleteByQuery({
                 index: this.index,
                 type: this.type,
                 body: query
             }, cb );
+        },
+        /**
+         * Get all items of Etk client
+         *
+         * @example
+         * elastic = require('elasticsearch');
+         * Etk = require('etk');
+         * var client = elastic.Client({hosts: ['localhost:9200']});
+         * client = Etk(client, {index: "myindex", type: "mytype"});
+         *
+         * client.tk.listAll(function (err, resp) {
+         *     ...
+         * });
+         *
+         * @param cb {function} Callback function of signature (err, resp)
+         * @param opt {JSON} Options for search
+         */
+        listAll: function(cb, opt) {
+            var esq = new Esq();
+            esq.query("query", "filtered", "query", "match_all", "", "");
+            var query_body = esq.getQuery();
+            var query = {index: this.index, type: this.type, body: query_body};
+            if (opt) {
+                _.merge(query, opt);
+            }
+            console.log(query);
+            this.client.search(query, cb );
         }
     };
 

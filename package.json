@@ -15,7 +15,8 @@
   "author": "R. Saltuk Alakus <saltukalakus@gmail.com>",
   "main": "index.js",
   "dependencies": {
-    "esq": "0.x.x"
+    "esq": "0.x.x",
+    "lodash": "^3.10.1"
   },
   "scripts": {
     "etk": "nodejs index.js",
