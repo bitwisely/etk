@@ -51,11 +51,14 @@ test("Populate the data set", function(t) {
     client_1.tk.deleteAll(function(err, resp){
         if (err) {
             t.fail("Data set could not be cleared. ERR: " + JSON.stringify(err));
-            t.end();
         }
         client_1.tk.bulkInsert(test_array, cb)
     });
     t.end();
+});
+
+test("Verify if the data set is stored", function(t) {
+
 });
 
 test("Search the data set with success", function(t){

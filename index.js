@@ -96,7 +96,6 @@ function Etk(client, opt) {
          */
         bulkInsert: function(data, cb) {
             var bulk_body = this._bulkArray(data);
-            console.log(bulk_body);
             client.bulk({
                 body: bulk_body
             }, cb);
