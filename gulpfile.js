@@ -104,14 +104,13 @@ gulp.task('deploy_site', function() {
         .pipe(ghPages());
 });
 
-gulp.task('publish', function() {
-    shell.task([
+gulp.task('publish', shell.task([
         'npm version patch',
         'git commit -m "Update Etk version"',
         'git push',
         'npm publish'
-    ]);
-});
+        ])
+);
 
 gulp.task('watch', function () {
     gulp.watch('./*.js', ['lint']);
