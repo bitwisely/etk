@@ -20,21 +20,23 @@ function Etk(client, opt) {
          * client = Etk(client, {index: "myindex", type: "mytype"});
          * client.tk.search("foo", "bar", function (err, resp) {
          *     ...
-         * });
+         * }, {"sort":"FIELD_NAME"});
          *
          * @param key {string} Key to search
          * @param value {string} Value of the key
          * @param cb {function} Callback function of signature (err, resp)
+         * @param [opt] {JSON} Additional options for search like "sort" for sorted results.
+         * Pass options as documented in elasticsearch.
          */
         search: function (key, value, cb) {
             var esq = new Esq();
             esq.query("query", "filtered", "query", "match", key, value);
-            var query = esq.getQuery();
-            this.client.search({
-                index: this.index,
-                type: this.type,
-                body: query},
-                cb);
+            var query_body = esq.getQuery();
+            var query = {index: this.index, type: this.type, body: query_body};
+            if (opt) {
+                _.merge(query, opt);
+            }
+            this.client.search(query, cb);
         },
 
         /**
@@ -48,24 +50,26 @@ function Etk(client, opt) {
          * client = Etk(client, {index: "myindex", type: "mytype"});
          * client.tk.searchLastDays("foo", "bar", 10, function (err, resp) {
          *     ...
-         * });
+         * }, {"sort":"FIELD_NAME"});
          *
          * @param key {string} Key to search
          * @param value {string} Value of the key
          * @param days {number} Number of days back to search
          * @param cb {function} Callback function of signature (err, resp)
+         * @param [opt] {JSON} Additional options for search like "sort" for sorted results.
+         * Pass options as documented in elasticsearch.
          */
-        searchLastDays: function (key, value, days, cb) {
+        searchLastDays: function (key, value, days, cb, opt) {
             var esq = new Esq();
             var search_days = "now-" + days.toString() + "d/d";
             esq.query("query", "filtered", "query", "match", key, value);
             esq.query("query", "filtered", "filter", "range", this.time_field, "gte", search_days);
-            var query = esq.getQuery();
-            this.client.search({
-                index: this.index,
-                type: this.type,
-                body: query},
-                cb);
+            var query_body = esq.getQuery();
+            var query = {index: this.index, type: this.type, body: query_body};
+            if (opt) {
+                _.merge(query, opt);
+            }
+            this.client.search(query, cb);
         },
         // Helper function to pack json array compatible with ElasticSearch bulk array format
         _bulkArray: function(data) {
@@ -152,7 +156,6 @@ function Etk(client, opt) {
             if (opt) {
                 _.merge(query, opt);
             }
-            console.log(query);
             this.client.search(query, cb );
         }
     };
