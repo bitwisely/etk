@@ -138,10 +138,11 @@ function Etk(client, opt) {
          *
          * client.tk.listAll(function (err, resp) {
          *     ...
-         * });
+         * }, {"sort":"FIELD_NAME"});
          *
          * @param cb {function} Callback function of signature (err, resp)
-         * @param opt {JSON} Options for search
+         * @param [opt] {JSON} Additional options for search like "sort" for sorted results.
+         * Pass options as documented in elasticsearch.
          */
         listAll: function(cb, opt) {
             var esq = new Esq();
