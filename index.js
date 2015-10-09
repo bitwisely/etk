@@ -4,6 +4,30 @@ _ = require('lodash');
 
 module.exports = Etk;
 
+/**
+ * @class Etk
+ * Etk client. Appended to Elastic Search instance with "tk" namespace.
+ *
+ * @example
+ * elastic = require('elasticsearch');
+ * Etk = require('etk');
+ * var client = elastic.Client({hosts: ['localhost:9200']});
+ * client = Etk(client, {index: "myindex", type: "mytype"});
+ * client.tk.search("foo", "bar", function (err, resp) {
+         *     ...
+         * });
+ *
+ * @param client {object} elasticsearch instance
+ * @param [opt] {json} Configuration options for Etk instance. </p>
+ *
+ * <strong>index</strong> {string} Index which Etk operates on. Default is <strong>*</strong> </p>
+ * <strong>type</strong>: {string} Type which Etk operated on. Default is <strong>*</strong> </p>
+ * <strong>raw_response</strong>: {bool} Returns elasticsearch response object without any modification. Default is <strong>false</strong>. </p>
+ * <strong>raw_error</strong>: {bool} Returns elasticsearch error object without any modification. Default is <strong>false</strong>. </p>
+ * <strong>insert_time</strong>: {bool} Inserts time field for every stored object to elasticsearch. Default is <strong>false</strong>. </p>
+ * <strong>time_field</strong>: {string} Timestamp name which is auto inserted to all stored fields.
+ * Default is <strong>@timestamp</strong> which is Logstash compatible. </p>
+ */
 function Etk(client, opt) {
     this.client = client;
     // Add tk namespace to elastic search object.
@@ -25,7 +49,7 @@ function Etk(client, opt) {
          * @param key {string} Key to search
          * @param value {string} Value of the key
          * @param cb {function} Callback function of signature (err, resp)
-         * @param [opt] {JSON} Additional options for search like "sort" for sorted results.
+         * @param [opt] {json} Additional options for search like "sort" for sorted results.
          * Pass options as documented in elasticsearch.
          */
         search: function (key, value, cb) {
@@ -56,7 +80,7 @@ function Etk(client, opt) {
          * @param value {string} Value of the key
          * @param days {number} Number of days back to search
          * @param cb {function} Callback function of signature (err, resp)
-         * @param [opt] {JSON} Additional options for search like "sort" for sorted results.
+         * @param [opt] {json} Additional options for search like "sort" for sorted results.
          * Pass options as documented in elasticsearch.
          */
         searchLastDays: function (key, value, days, cb, opt) {
@@ -134,9 +158,7 @@ function Etk(client, opt) {
         _deleteAllCb: function (cb) {
             return function(err, resp) {
                 if (err) {
-                    console.log("Err -1 ");
                     if (err["status"] == "404") {
-                        console.log("Err - 2")
                         cb(false, {});
                     }
                 } else {
@@ -158,7 +180,7 @@ function Etk(client, opt) {
          * }, {"sort":"FIELD_NAME"});
          *
          * @param cb {function} Callback function of signature (err, resp)
-         * @param [opt] {JSON} Additional options for search like "sort" for sorted results.
+         * @param [opt] {json} Additional options for search like "sort" for sorted results.
          * Pass options as documented in elasticsearch.
          */
         listAll: function(cb, opt) {
@@ -175,12 +197,16 @@ function Etk(client, opt) {
 
     // Store elastic search client for etk use
     this.client.tk.client = this.client;
+
+    // Etk options
+    this.client.tk.index = opt.index || "*";
+    this.client.tk.type = opt.type || "*";
+    this.client.tk.raw_response = opt.raw_response || false;
+    this.client.tk.raw_error = opt.raw_error || false;
+    this.client.tk.insert_time = this.client.tk.insert_time || false;
     // Default time field is Logstash compatible
     this.client.tk.time_field = opt.time_field || "@timestamp";
-    // Default searches "all" available index
-    this.client.tk.index = opt.index || "*";
-    // Default searches "all" available types
-    this.client.tk.type = opt.type || "*";
+
     // Return the extended object
     return this.client;
 }
