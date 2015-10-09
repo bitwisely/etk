@@ -129,7 +129,17 @@ function Etk(client, opt) {
                 index: this.index,
                 type: this.type,
                 body: query
-            }, cb );
+            }, this._deleteAllCb(cb));
+        },
+        _deleteAllCb: function (cb) {
+            return function(err, resp) {
+                if (err) {
+                    if (err.status == "404") {
+                        cb(false, {});
+                    }
+                }
+                cb(err, resp);
+            }
         },
         /**
          * Get all items of Etk client
