@@ -432,7 +432,7 @@ client.tk.deleteAll(function (err, resp) {
         
             
 <dt>
-    <h4 class="name" id="listAll"><span class="type-signature"></span>listAll<span class="signature">(cb, opt)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="listAll"><span class="type-signature"></span>listAll<span class="signature">(cb, <span class="optional">opt</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -463,6 +463,8 @@ client.tk.deleteAll(function (err, resp) {
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
 		
 
@@ -488,6 +490,14 @@ client.tk.deleteAll(function (err, resp) {
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -511,10 +521,21 @@ client.tk.deleteAll(function (err, resp) {
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last">Options for search</td>
+            <td class="description last">Additional options for search like "sort" for sorted results.
+Pass options as documented in elasticsearch.</td>
         </tr>
 
 	
@@ -585,7 +606,7 @@ client = Etk(client, {index: &quot;myindex&quot;, type: &quot;mytype&quot;});
 
 client.tk.listAll(function (err, resp) {
     ...
-});</pre>
+}, {&quot;sort&quot;:&quot;FIELD_NAME&quot;});</pre>
 
 
     
@@ -594,7 +615,7 @@ client.tk.listAll(function (err, resp) {
         
             
 <dt>
-    <h4 class="name" id="search"><span class="type-signature"></span>search<span class="signature">(key, value, cb)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="search"><span class="type-signature"></span>search<span class="signature">(key, value, cb, <span class="optional">opt</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -626,6 +647,8 @@ function.
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
 		
 
@@ -651,6 +674,14 @@ function.
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -673,6 +704,14 @@ function.
             
             </td>
 
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
             
 
             
@@ -697,10 +736,52 @@ function.
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
             <td class="description last">Callback function of signature (err, resp)</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>opt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">JSON</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Additional options for search like "sort" for sorted results.
+Pass options as documented in elasticsearch.</td>
         </tr>
 
 	
@@ -770,7 +851,7 @@ var client = elastic.Client({hosts: [&#x27;localhost:9200&#x27;]});
 client = Etk(client, {index: &quot;myindex&quot;, type: &quot;mytype&quot;});
 client.tk.search(&quot;foo&quot;, &quot;bar&quot;, function (err, resp) {
     ...
-});</pre>
+}, {&quot;sort&quot;:&quot;FIELD_NAME&quot;});</pre>
 
 
     
@@ -779,7 +860,7 @@ client.tk.search(&quot;foo&quot;, &quot;bar&quot;, function (err, resp) {
         
             
 <dt>
-    <h4 class="name" id="searchLastDays"><span class="type-signature"></span>searchLastDays<span class="signature">(key, value, days, cb)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="searchLastDays"><span class="type-signature"></span>searchLastDays<span class="signature">(key, value, days, cb, <span class="optional">opt</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -811,6 +892,8 @@ Returns result to the callback function.
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
 		
 
@@ -836,6 +919,14 @@ Returns result to the callback function.
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -858,6 +949,14 @@ Returns result to the callback function.
             
             </td>
 
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
             
 
             
@@ -882,6 +981,14 @@ Returns result to the callback function.
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -905,10 +1012,52 @@ Returns result to the callback function.
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
             <td class="description last">Callback function of signature (err, resp)</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>opt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">JSON</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Additional options for search like "sort" for sorted results.
+Pass options as documented in elasticsearch.</td>
         </tr>
 
 	
@@ -978,7 +1127,7 @@ var client = elastic.Client({hosts: [&#x27;localhost:9200&#x27;]});
 client = Etk(client, {index: &quot;myindex&quot;, type: &quot;mytype&quot;});
 client.tk.searchLastDays(&quot;foo&quot;, &quot;bar&quot;, 10, function (err, resp) {
     ...
-});</pre>
+}, {&quot;sort&quot;:&quot;FIELD_NAME&quot;});</pre>
 
 
     
@@ -1022,7 +1171,7 @@ client.tk.searchLastDays(&quot;foo&quot;, &quot;bar&quot;, 10, function (err, re
 
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a>
-	on 2015-10-07T17:27:48+03:00 using the <a
+	on 2015-10-09T11:25:15+03:00 using the <a
 	href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 </span>
 </footer>
