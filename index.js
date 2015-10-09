@@ -139,8 +139,9 @@ function Etk(client, opt) {
                         console.log("Err - 2")
                         cb(false, {});
                     }
+                } else {
+                    cb(err, resp);
                 }
-                cb(err, resp);
             }
         },
         /**
