@@ -134,9 +134,9 @@ function Etk(client, opt) {
         _deleteAllCb: function (cb) {
             return function(err, resp) {
                 if (err) {
-                    if (err.status == "404") {
+                    //if (err["status"] == "404") {
                         cb(false, {});
-                    }
+                    //}
                 }
                 cb(err, resp);
             }
