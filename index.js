@@ -32,7 +32,7 @@ function Etk(client, opt) {
     this.client = client;
     // Add tk namespace to elastic search object.
     this.client.tk = this.client.tk || {
-        _query : function (query_body) {
+        _query : function (query_body, opt) {
             var query = {index: this.index, type: this.type, body: query_body};
             if (opt) {
                 _.merge(query, opt);
@@ -59,14 +59,11 @@ function Etk(client, opt) {
          * @param [opt] {json} Additional options for search like "sort" for sorted results.
          * Pass options as documented in elasticsearch.
          */
-        search: function (key, value, cb) {
+        search: function (key, value, cb, opt) {
             var esq = new Esq();
             esq.query("query", "filtered", "query", "match", key, value);
             var query_body = esq.getQuery();
-            var query = {index: this.index, type: this.type, body: query_body};
-            if (opt) {
-                _.merge(query, opt);
-            }
+            var query = this._query(query_body, opt);
             this.client.search(query, cb);
         },
 
@@ -96,10 +93,7 @@ function Etk(client, opt) {
             esq.query("query", "filtered", "query", "match", key, value);
             esq.query("query", "filtered", "filter", "range", this.time_field, "gte", search_days);
             var query_body = esq.getQuery();
-            var query = {index: this.index, type: this.type, body: query_body};
-            if (opt) {
-                _.merge(query, opt);
-            }
+            var query = this._query(query_body, opt);
             this.client.search(query, cb);
         },
         // Helper function to pack json array compatible with ElasticSearch bulk array format
@@ -155,18 +149,16 @@ function Etk(client, opt) {
         deleteAll: function(cb, opt) {
             var esq = new Esq();
             esq.query("query", "filtered", "query", "match_all", "", "");
-            var query = esq.getQuery();
-            this.client.deleteByQuery({
-                index: this.index,
-                type: this.type,
-                body: query
-            }, this._deleteAllCb(cb, this));
+            var query_body = esq.getQuery();
+            var query = this._query(query_body, opt);
+            this.client.deleteByQuery(query, this._deleteAllCb(cb, this));
         },
         _deleteAllCb: function (cb, self) {
             var self = self;
             return function(err, resp) {
                 if (err && !self.raw_error) {
                     if (err["status"] == "404") {
+                        // If index is not found deleting sould not return error.
                         cb(false, {});
                     } else {
                         cb(err, resp);
@@ -197,11 +189,7 @@ function Etk(client, opt) {
             var esq = new Esq();
             esq.query("query", "filtered", "query", "match_all", "", "");
             var query_body = esq.getQuery();
-            //var query = {index: this.index, type: this.type, body: query_body};
-            //if (opt) {
-            //    _.merge(query, opt);
-            //}
-            var query = this._query(query_body);
+            var query = this._query(query_body, opt);
             this.client.search(query, cb );
         }
     };
