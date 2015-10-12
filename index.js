@@ -32,6 +32,13 @@ function Etk(client, opt) {
     this.client = client;
     // Add tk namespace to elastic search object.
     this.client.tk = this.client.tk || {
+        _query : function (query_body) {
+            var query = {index: this.index, type: this.type, body: query_body};
+            if (opt) {
+                _.merge(query, opt);
+            }
+            return query;
+        },
 
         /**
          * Searches the key-value pair of Etk client. Returns result to the callback
@@ -145,7 +152,7 @@ function Etk(client, opt) {
          *
          * @param cb {function} Callback function of signature (err, resp)
          */
-        deleteAll: function(cb) {
+        deleteAll: function(cb, opt) {
             var esq = new Esq();
             esq.query("query", "filtered", "query", "match_all", "", "");
             var query = esq.getQuery();
@@ -153,13 +160,16 @@ function Etk(client, opt) {
                 index: this.index,
                 type: this.type,
                 body: query
-            }, this._deleteAllCb(cb));
+            }, this._deleteAllCb(cb, this));
         },
-        _deleteAllCb: function (cb) {
+        _deleteAllCb: function (cb, self) {
+            var self = self;
             return function(err, resp) {
-                if (err) {
+                if (err && !self.raw_error) {
                     if (err["status"] == "404") {
                         cb(false, {});
+                    } else {
+                        cb(err, resp);
                     }
                 } else {
                     cb(err, resp);
@@ -187,10 +197,11 @@ function Etk(client, opt) {
             var esq = new Esq();
             esq.query("query", "filtered", "query", "match_all", "", "");
             var query_body = esq.getQuery();
-            var query = {index: this.index, type: this.type, body: query_body};
-            if (opt) {
-                _.merge(query, opt);
-            }
+            //var query = {index: this.index, type: this.type, body: query_body};
+            //if (opt) {
+            //    _.merge(query, opt);
+            //}
+            var query = this._query(query_body);
             this.client.search(query, cb );
         }
     };

@@ -8,7 +8,7 @@ var client = elastic.Client({
     ]
 });
 
-var client_1 = new etk(client, {index: "myindex", type: "mytype"});
+var client_1 = new etk(client, {index: "myindex", type: "mytype", raw_error: true});
 
 /*
 //var client_2 = new etk(client, {index: "myin3dex2", type: "myty3pe2"});
