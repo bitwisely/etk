@@ -8,7 +8,7 @@ var client = elastic.Client({
     ]
 });
 
-var client_1 = new etk(client, {index: "myindex", type: "mytype", raw_error: true});
+var client_1 = new etk(client, {index: "myindex", type: "mytype"});
 
 /*
 //var client_2 = new etk(client, {index: "myin3dex2", type: "myty3pe2"});
@@ -43,6 +43,21 @@ client_1.tk.search("foo", 1, function (err, resp) {
 var test_array= [{foo:1, bar:2, baz: "John", "@timestamp": new Date().toISOString(), "id" : 1},
     {foo:2, bar:4, baz: "Dough", "@timestamp": new Date().toISOString(), "id": 2},
     {foo:0, bar:5, baz: "Jane", "@timestamp": new Date().toISOString(), "id": 3}];
+
+test("Delete data set", function(t) {
+    function cb (err, resp) {
+        if (err)
+            t.fail("ERR: " + JSON.stringify(err));
+    }
+    client_1.tk.deleteAll(function(err, resp){
+        if (err) {
+            t.fail("Data set could not be cleared. ERR: " + JSON.stringify(err));
+        }
+        console.log("Now bulk insert");
+        client_1.tk.bulkInsert(test_array, cb);
+    });
+    t.end();
+});
 
 test("Populate the data set", function(t) {
     function cb (err, resp) {
