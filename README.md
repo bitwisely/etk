@@ -36,7 +36,7 @@ $ npm install etk
 
 ## People
 
-Author of Etk is [R. Saltuk Alakus](https://github.com/saltukalakus)
+Original author of Etk is [R. Saltuk Alakus](https://github.com/saltukalakus)
 
 Looking for maintainers. Please drop me an email at saltukalakus.gmail.com
 
