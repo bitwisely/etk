@@ -190,7 +190,26 @@ function Etk(client, opt) {
             esq.query("query", "filtered", "query", "match_all", "", "");
             var query_body = esq.getQuery();
             var query = this._query(query_body, opt);
-            this.client.search(query, cb );
+            this.client.search(query, this._listAllCb(cb, this));
+        },
+        _listAllCb: function (cb, self) {
+            var self = self;
+            return function(err, resp) {
+                if (err) {
+                    cb(err, resp);
+                } else {
+                    if (self.raw_response) {
+                        cb(err, resp);
+                    } else {
+                        // Return only the data as array
+                        var resp_array = [];
+                        for (var item in resp['hits']['hits']) {
+                            resp_array.push(resp['hits']['hits'][item]['_source']);
+                        }
+                        cb(err, resp_array);
+                    }
+                }
+            }
         }
     };
 

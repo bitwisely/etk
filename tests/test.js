@@ -1,6 +1,6 @@
 var test = require('tape');
 var elastic = require('elasticsearch');
-var etk = require('../index');
+var Etk = require('../index');
 
 var client = elastic.Client({
     hosts: [
@@ -8,7 +8,7 @@ var client = elastic.Client({
     ]
 });
 
-var client_1 = new etk(client, {index: "myindex", type: "mytype"});
+var client_1 = new Etk(client, {index: "myindex", type: "mytype"});
 
 /*
 //var client_2 = new etk(client, {index: "myin3dex2", type: "myty3pe2"});
@@ -53,8 +53,6 @@ test("Delete data set", function(t) {
         if (err) {
             t.fail("Data set could not be cleared. ERR: " + JSON.stringify(err));
         }
-        console.log("Now bulk insert");
-        client_1.tk.bulkInsert(test_array, cb);
     });
     t.end();
 });
@@ -82,10 +80,10 @@ test("Verify if the data set is successfully stored", function(t) {
             t.fail("ERR: " + JSON.stringify(err));
         }
 
-        console.log(JSON.stringify(resp));
-
-        for (var item in resp['hits']['hits']) {
-            t.equal(JSON.stringify(test_array[item]), JSON.stringify(resp['hits']['hits'][item]['_source']));
+        //for (var item in resp['hits']['hits']) {
+        for (var item in resp) {
+            //t.equal(JSON.stringify(test_array[item]), JSON.stringify(resp['hits']['hits'][item]['_source']));
+            t.equal(JSON.stringify(test_array[item]), JSON.stringify(resp[item]));
         }
     }
 
@@ -95,9 +93,36 @@ test("Verify if the data set is successfully stored", function(t) {
     }, 3000);
 });
 
-test("Search the data set with success", function(t){
+/*
+test("Verify in raw response mode, if the data set is successfully stored", function(t) {
+    t.plan(3);
+
+    function cb (err, resp) {
+        if (err) {
+            t.fail("ERR: " + JSON.stringify(err));
+        }
+
+       for (var item in resp['hits']['hits']) {
+            t.equal(JSON.stringify(test_array[item]), JSON.stringify(resp['hits']['hits'][item]['_source']));
+        }
+    }
+
     setTimeout(function() {
-        console.log('Blah blah blah blah extra-blah');
+        // Give elastic search some time to index
+        client_1.tk.listAll(cb, {"sort": "id", "raw_response": true});
+    }, 3000);
+});
+*/
+
+test("Search the data set with success", function(t){
+    function cb(err, resp) {
+        if (err) {
+            t.fail("ERR: " + JSON.stringify(err));
+        }
+    }
+
+    setTimeout(function() {
+        //client_1.tk.search(cb, )
     }, 3000);
     t.end();
 });
