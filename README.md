@@ -13,7 +13,7 @@ Makes life easy with ElasticSearch.
     var client = elastic.Client({hosts: ['localhost:9200']});
 
     // First Etk sample instance (tk_1) makes Elasticsearch calls against
-    // index = my_index and type = my_type
+    // index = my_index and type = my_type using elasticsearch instance
     var tk_1 = Etk(client, {index: "my_index", type: "my_type"});
     tk_1.search("foo", "bar", function (err, resp) {
         ...
