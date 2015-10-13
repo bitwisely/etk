@@ -19,8 +19,9 @@ Makes life easy with ElasticSearch.
         ...
     });
 
-    // Second Etk sample instance passes elasticsearch error and response messages untouched
-    // to application. See class documentation for full list of Etk options you can configure
+    // Second Etk sample instance passes elasticsearch error and response 
+    // messages untouched to application. See class documentation for full 
+    // list of Etk options you can configure
     var tk_2 = Etk(client, {index: "another_index",
                             type: "another_type",
                             raw_response: true,
