@@ -9,33 +9,33 @@ var client = elastic.Client({
 });
 
 // First test data set is stored in myindex-mytype index/type store
-var client_1 = new Etk(client, {index: "myindex", type: "mytype"});
+var tk_1 = new Etk(client, {index: "myindex", type: "mytype"});
 // Second test data set is stored in myuser-myname index/type store
-var client_2 = new Etk(client, {index: "myuser", type: "myname"});
+var tk_2 = new Etk(client, {index: "myuser", type: "myname"});
 
 /*
 
-client_1.tk.searchLastDays("foo", 1, 20, function (err, resp) {
+tk_1.searchLastDays("foo", 1, 20, function (err, resp) {
     console.log("1");
     console.log(JSON.stringify(resp));
 });
 
-client_1.tk.search("foo", 1, function (err, resp) {
+tk_1.search("foo", 1, function (err, resp) {
     console.log("2");
     console.log(JSON.stringify(resp));
 });
 
-client_2.tk.searchLastDays("foo", 1, 20, function (err, resp) {
+tk_2.searchLastDays("foo", 1, 20, function (err, resp) {
     console.log("3");
     console.log(JSON.stringify(resp));
 });
 
-client_2.tk.search("foo", 1, function (err, resp) {
+tk_2.search("foo", 1, function (err, resp) {
     console.log("4");
     console.log(JSON.stringify(resp));
 });
 
-client_1.tk.search("foo", 1, function (err, resp) {
+tk_1.search("foo", 1, function (err, resp) {
     console.log("5");
     console.log(JSON.stringify(resp));
 });
@@ -55,7 +55,7 @@ test("Delete data set - 1", function(t) {
         if (err)
             t.fail("ERR: " + JSON.stringify(err));
     }
-    client_1.tk.deleteAll(function(err, resp){
+    tk_1.deleteAll(function(err, resp){
         if (err) {
             t.fail("Data set could not be cleared. ERR: " + JSON.stringify(err));
         }
@@ -68,7 +68,7 @@ test("Delete data set - 2", function(t) {
         if (err)
             t.fail("ERR: " + JSON.stringify(err));
     }
-    client_2.tk.deleteAll(function(err, resp){
+    tk_2.deleteAll(function(err, resp){
         if (err) {
             t.fail("Data set could not be cleared. ERR: " + JSON.stringify(err));
         }
@@ -81,12 +81,12 @@ test("Populate the data set - 1", function(t) {
         if (err)
             t.fail("ERR: " + JSON.stringify(err));
     }
-    client_1.tk.deleteAll(function(err, resp){
+    tk_1.deleteAll(function(err, resp){
         if (err) {
             t.fail("Data set could not be cleared. ERR: " + JSON.stringify(err));
         }
         console.log("Now bulk insert");
-        client_1.tk.bulkInsert(test_array_1, cb);
+        tk_1.bulkInsert(test_array_1, cb);
     });
     t.end();
 });
@@ -96,12 +96,12 @@ test("Populate the data set - 2", function(t) {
         if (err)
             t.fail("ERR: " + JSON.stringify(err));
     }
-    client_2.tk.deleteAll(function(err, resp){
+    tk_2.deleteAll(function(err, resp){
         if (err) {
             t.fail("Data set could not be cleared. ERR: " + JSON.stringify(err));
         }
         console.log("Now bulk insert");
-        client_2.tk.bulkInsert(test_array_2, cb);
+        tk_2.bulkInsert(test_array_2, cb);
     });
     t.end();
 });
@@ -114,8 +114,6 @@ test("Verify if the data set is successfully stored for set - 1", function(t) {
             t.fail("ERR: " + JSON.stringify(err));
         }
 
-        //for (var item in resp['hits']['hits']) {
-        console.log(JSON.stringify(resp));
         for (var item in resp) {
             t.equal(JSON.stringify(test_array_1[item]), JSON.stringify(resp[item]));
         }
@@ -123,7 +121,7 @@ test("Verify if the data set is successfully stored for set - 1", function(t) {
 
     setTimeout(function() {
         // Give elastic search some time to index
-        client_1.tk.listAll(cb, {"sort": "id"});
+        tk_1.listAll(cb, {"sort": "id"});
     }, 3000);
 });
 
@@ -143,7 +141,7 @@ test("Verify in raw response mode, if the data set is successfully stored", func
 
     setTimeout(function() {
         // Give elastic search some time to index
-        client_1.tk.listAll(cb, {"sort": "id", "raw_response": true});
+        tk_1.listAll(cb, {"sort": "id", "raw_response": true});
     }, 3000);
 });
 */
@@ -156,7 +154,7 @@ test("Search the data set with success", function(t){
     }
 
     setTimeout(function() {
-        //client_1.tk.search(cb, )
+        //tk_1.search(cb, )
     }, 3000);
     t.end();
 });

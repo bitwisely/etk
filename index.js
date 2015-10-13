@@ -12,8 +12,8 @@ module.exports = Etk;
  * elastic = require('elasticsearch');
  * Etk = require('etk');
  * var client = elastic.Client({hosts: ['localhost:9200']});
- * client = Etk(client, {index: "myindex", type: "mytype"});
- * client.tk.search("foo", "bar", function (err, resp) {
+ * var tk = new Etk(client, {index: "myindex", type: "mytype"});
+ * tk.search("foo", "bar", function (err, resp) {
          *     ...
          * });
  *
@@ -49,8 +49,8 @@ function Etk(client, opt) {
          * elastic = require('elasticsearch');
          * Etk = require('etk');
          * var client = elastic.Client({hosts: ['localhost:9200']});
-         * client = Etk(client, {index: "myindex", type: "mytype"});
-         * client.tk.search("foo", "bar", function (err, resp) {
+         * var tk = new Etk(client, {index: "myindex", type: "mytype"});
+         * tk.search("foo", "bar", function (err, resp) {
          *     ...
          * }, {"sort":"FIELD_NAME"});
          *
@@ -76,8 +76,8 @@ function Etk(client, opt) {
          * elastic = require('elasticsearch');
          * Etk = require('etk');
          * var client = elastic.Client({hosts: ['localhost:9200']});
-         * client = Etk(client, {index: "myindex", type: "mytype"});
-         * client.tk.searchLastDays("foo", "bar", 10, function (err, resp) {
+         * var tk = new Etk(client, {index: "myindex", type: "mytype"});
+         * tk.searchLastDays("foo", "bar", 10, function (err, resp) {
          *     ...
          * }, {"sort":"FIELD_NAME"});
          *
@@ -113,13 +113,13 @@ function Etk(client, opt) {
          * elastic = require('elasticsearch');
          * Etk = require('etk');
          * var client = elastic.Client({hosts: ['localhost:9200']});
-         * client = Etk(client, {index: "myindex", type: "mytype"});
+         * var tk = new Etk(client, {index: "myindex", type: "mytype"});
          *
          * var test_array= [{foo:1, bar:2, baz: "John", "@timestamp": new Date().toISOString()},
          *     {foo:2, bar:4, baz: "Dough", "@timestamp": new Date().toISOString()},
          *     {foo:0, bar:5, baz: "Jane", "@timestamp": new Date().toISOString()}];
          *
-         * client.tk.bulkInsert(test_array, function (err, resp) {
+         * tk.bulkInsert(test_array, function (err, resp) {
          *     ...
          * });
          *
@@ -139,9 +139,9 @@ function Etk(client, opt) {
          * elastic = require('elasticsearch');
          * Etk = require('etk');
          * var client = elastic.Client({hosts: ['localhost:9200']});
-         * client = Etk(client, {index: "myindex", type: "mytype"});
+         * var tk = Etk(client, {index: "myindex", type: "mytype"});
          *
-         * client.tk.deleteAll(function (err, resp) {
+         * tk.deleteAll(function (err, resp) {
          *     ...
          * });
          *
@@ -176,9 +176,9 @@ function Etk(client, opt) {
          * elastic = require('elasticsearch');
          * Etk = require('etk');
          * var client = elastic.Client({hosts: ['localhost:9200']});
-         * client = Etk(client, {index: "myindex", type: "mytype"});
+         * var tk = new Etk(client, {index: "myindex", type: "mytype"});
          *
-         * client.tk.listAll(function (err, resp) {
+         * tk.listAll(function (err, resp) {
          *     ...
          * }, {"sort":"FIELD_NAME"});
          *
@@ -225,4 +225,6 @@ function Etk(client, opt) {
     this.tk.insert_time = opt.insert_time || false;
     // Default time field is Logstash compatible
     this.tk.time_field = opt.time_field || "@timestamp";
+
+    return this.tk;
 }
