@@ -26,10 +26,11 @@ $ npm install etk
 
 ## Features
 * Extents the official [elasticsearch](https://github.com/elastic/elasticsearch-js) project with easy to use, well documented function calls.
+* Parses elasticsearch error and response messages in useful ways. Yet you have the option to receive them as they are with configuration options.
 * Etk library is inserted into elasticsearch with "tk" namespace.
 * Uses same elasticsearch instance in multiple Etk clients.
 * All API calls are tested against the latest elasticsearch release.
-* Elasticsearch can be used alongside without any change.
+* elasticsearch can be used alongside without any change.
 
 ## API Documentation with Examples
 [Site-Link](http://saltukalakus.github.io/etk)
