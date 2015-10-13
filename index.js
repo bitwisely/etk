@@ -6,22 +6,23 @@ module.exports = Etk;
 
 /**
  * @class Etk
- * Etk client. Appended to Elastic Search instance with "tk" namespace.
  *
  * @example
  * elastic = require('elasticsearch');
- * Etk = require('etk');
+ * Etk     = require('etk');
+ *
  * var client = elastic.Client({hosts: ['localhost:9200']});
- * var tk = new Etk(client, {index: "myindex", type: "mytype"});
+ * var tk     = new Etk(client, {index: "myindex", type: "mytype"});
+ *
  * tk.search("foo", "bar", function (err, resp) {
-         *     ...
-         * });
+ *     ...
+ * });
  *
  * @param client {object} elasticsearch instance
  * @param [opt] {json} Configuration options for Etk instance. </p>
  *
- * <strong>index</strong> {string} Index which Etk operates on. Default is <strong>*</strong> </p>
- * <strong>type</strong>: {string} Type which Etk operated on. Default is <strong>*</strong> </p>
+ * <strong>index</strong> {string} Index which Etk operates on. Default is <strong>search all</strong> </p>
+ * <strong>type</strong>: {string} Type which Etk operated on. Default is <strong>search all</strong> </p>
  * <strong>raw_response</strong>: {bool} Returns elasticsearch response object without any modification. Default is <strong>false</strong>. </p>
  * <strong>raw_error</strong>: {bool} Returns elasticsearch error object without any modification. Default is <strong>false</strong>. </p>
  * <strong>insert_time</strong>: {bool} Inserts time field for every stored object to elasticsearch. Default is <strong>false</strong>. </p>
@@ -47,7 +48,7 @@ function Etk(client, opt) {
          *
          * @example
          * elastic = require('elasticsearch');
-         * Etk = require('etk');
+         * Etk     = require('etk');
          * var client = elastic.Client({hosts: ['localhost:9200']});
          * var tk = new Etk(client, {index: "myindex", type: "mytype"});
          * tk.search("foo", "bar", function (err, resp) {

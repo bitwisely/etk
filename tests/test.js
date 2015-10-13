@@ -10,45 +10,22 @@ var client = elastic.Client({
 
 // First test data set is stored in myindex-mytype index/type store
 var tk_1 = new Etk(client, {index: "myindex", type: "mytype"});
+
 // Second test data set is stored in myuser-myname index/type store
-var tk_2 = new Etk(client, {index: "myuser", type: "myname"});
-
-/*
-
-tk_1.searchLastDays("foo", 1, 20, function (err, resp) {
-    console.log("1");
-    console.log(JSON.stringify(resp));
-});
-
-tk_1.search("foo", 1, function (err, resp) {
-    console.log("2");
-    console.log(JSON.stringify(resp));
-});
-
-tk_2.searchLastDays("foo", 1, 20, function (err, resp) {
-    console.log("3");
-    console.log(JSON.stringify(resp));
-});
-
-tk_2.search("foo", 1, function (err, resp) {
-    console.log("4");
-    console.log(JSON.stringify(resp));
-});
-
-tk_1.search("foo", 1, function (err, resp) {
-    console.log("5");
-    console.log(JSON.stringify(resp));
-});
-
-*/
+// In this set etk instance passes elasticsearch error and response messages
+// untouched
+var tk_2 = new Etk(client, {index: "another_index",
+                            type: "another_type",
+                            raw_response: true,
+                            raw_error: false});
 
 var test_array_1= [{foo:1, bar:2, baz: "John", "@timestamp": new Date().toISOString(), "id" : 1},
     {foo:2, bar:4, baz: "Dough", "@timestamp": new Date().toISOString(), "id": 2},
     {foo:0, bar:5, baz: "Jane", "@timestamp": new Date().toISOString(), "id": 3}];
 
-var test_array_2= [{woman:"Mary", "man":"John", "id" : 1},
-    {woman:"Curry", "man":"Tesla", "id" : 2},
-    {woman:"Jane", "man":"Bob", "id" : 3}];
+var test_array_2= [{woman:"Mary", man:"John", "id" : 1},
+    {woman:"Curry", man:"Tesla", "id" : 2},
+    {woman:"Jane", man:"Bob", "id" : 3}];
 
 test("Delete data set - 1", function(t) {
     function cb (err, resp) {
@@ -76,7 +53,7 @@ test("Delete data set - 2", function(t) {
     t.end();
 });
 
-test("Populate the data set - 1", function(t) {
+test("Populate data set - 1", function(t) {
     function cb (err, resp) {
         if (err)
             t.fail("ERR: " + JSON.stringify(err));
@@ -91,7 +68,7 @@ test("Populate the data set - 1", function(t) {
     t.end();
 });
 
-test("Populate the data set - 2", function(t) {
+test("Populate data set - 2", function(t) {
     function cb (err, resp) {
         if (err)
             t.fail("ERR: " + JSON.stringify(err));
@@ -106,7 +83,7 @@ test("Populate the data set - 2", function(t) {
     t.end();
 });
 
-test("Verify if the data set is successfully stored for set - 1", function(t) {
+test("Verify if the data set is successfully stored for sample set - 1", function(t) {
     t.plan(3);
 
     function cb (err, resp) {
@@ -120,13 +97,12 @@ test("Verify if the data set is successfully stored for set - 1", function(t) {
     }
 
     setTimeout(function() {
-        // Give elastic search some time to index
+        // Give elastic search some time to index newly stored data set
         tk_1.listAll(cb, {"sort": "id"});
     }, 3000);
 });
 
-/*
-test("Verify in raw response mode, if the data set is successfully stored", function(t) {
+test("Verify if the data set is successfully stored for sample set - 2", function(t) {
     t.plan(3);
 
     function cb (err, resp) {
@@ -134,19 +110,20 @@ test("Verify in raw response mode, if the data set is successfully stored", func
             t.fail("ERR: " + JSON.stringify(err));
         }
 
+       // Response is in raw form. So application should handle elasticsearch's crappy json format.
        for (var item in resp['hits']['hits']) {
             t.equal(JSON.stringify(test_array_1[item]), JSON.stringify(resp['hits']['hits'][item]['_source']));
         }
     }
 
     setTimeout(function() {
-        // Give elastic search some time to index
-        tk_1.listAll(cb, {"sort": "id", "raw_response": true});
+        // Give elastic search some time to index newly stored data set
+        tk_2.listAll(cb, {"sort": "id", "raw_response": true});
     }, 3000);
 });
-*/
 
-test("Search the data set with success", function(t){
+
+test("Search the data set with success for set - 1 ", function(t){
     function cb(err, resp) {
         if (err) {
             t.fail("ERR: " + JSON.stringify(err));
@@ -162,3 +139,32 @@ test("Search the data set with success", function(t){
 test("Search should find only in defined index-type pair", function(t){
     t.end();
 });
+
+/*
+
+ tk_1.searchLastDays("foo", 1, 20, function (err, resp) {
+ console.log("1");
+ console.log(JSON.stringify(resp));
+ });
+
+ tk_1.search("foo", 1, function (err, resp) {
+ console.log("2");
+ console.log(JSON.stringify(resp));
+ });
+
+ tk_2.searchLastDays("foo", 1, 20, function (err, resp) {
+ console.log("3");
+ console.log(JSON.stringify(resp));
+ });
+
+ tk_2.search("foo", 1, function (err, resp) {
+ console.log("4");
+ console.log(JSON.stringify(resp));
+ });
+
+ tk_1.search("foo", 1, function (err, resp) {
+ console.log("5");
+ console.log(JSON.stringify(resp));
+ });
+
+ */

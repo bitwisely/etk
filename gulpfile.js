@@ -34,6 +34,7 @@ gulp.task('jsbuild', function() {
 
 // Document the API
 gulp.task('api_document', shell.task([
+    'rm -Rf ./out',
     'cp ./confs/jsdoc/jsdoc-conf.json ./node_modules/jsdoc/conf.json',
     /*jshint multistr: true */
     './node_modules/jsdoc/jsdoc.js index.js\
@@ -73,8 +74,26 @@ gulp.task('patch_index_html_document', ['api_document', 'index_markdown_2_html']
         .pipe(gulp.dest('out'));
 });
 
+
+// Document class web site patches
+gulp.task('patch_class_document', ['patch_index_html_document'], function(){
+    gulp.src(['out/Etk.html'])
+        .pipe(replace("</body>\n</html>",
+                "<style> .type-signature { font-size:60px;} .signature {color: orange;} .page-title {display: none;}</style>" +
+                "<script type='text/javascript' src='scripts/jquery-watch-element.js'></script>" +
+                "<script>$( document ).ready(function(){$('.toc-h1').waitUntilExists(" +
+                "function(){$('.toc-h1').hide(); " +
+                "$('.toc-h2').hide()}, " +
+                "false, true);});" +
+                "</script>" +
+                '<a href="https://github.com/saltukalakus/etk"><img style="position: fixed; top: 0; left: 0; border: 0; z-index: 999999" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>' +
+                "</body>\n</html>"))
+        .pipe(replace("Global", "Class"))
+        .pipe(gulp.dest('out'));
+});
+
 // Document api web site patches
-gulp.task('patch_api_document', ['patch_index_html_document'], function(){
+gulp.task('patch_api_document', ['patch_class_document'], function(){
     gulp.src(['out/global.html'])
         .pipe(replace("</body>\n</html>",
             "<style> .type-signature { font-size:60px;} .signature {color: orange;} .page-title {display: none;}</style>" +
