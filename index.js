@@ -43,7 +43,9 @@ function Etk(client, opt) {
         },
 
         /**
-         * Searches the key-value pair of Etk client. Returns result to the callback
+         * @method
+         * @name search
+         * @description Searches the key-value pair of Etk client. Returns result to the callback
          * function.
          *
          * @example
@@ -70,7 +72,9 @@ function Etk(client, opt) {
         },
 
         /**
-         * Searches the key-value pair for the last number of days of Etk client
+         * @method
+         * @name searchLastDays
+         * @description Searches the key-value pair for the last number of days of Etk client
          * Returns result to the callback function.
          *
          * @example
@@ -108,7 +112,9 @@ function Etk(client, opt) {
             return bulk_formed;
         },
         /**
-         * Inserts Json arrays in bulk mode to the Etk client
+         * @method
+         * @name bulkInsert
+         * @description Inserts Json arrays in bulk mode to the Etk client
          *
          * @example
          * elastic = require('elasticsearch');
@@ -134,7 +140,9 @@ function Etk(client, opt) {
             }, cb);
         },
         /**
-         * Delete all items of Etk client
+         * @method
+         * @name deleteAll
+         * @description Delete all items of Etk client
          *
          * @example
          * elastic = require('elasticsearch');
@@ -171,7 +179,9 @@ function Etk(client, opt) {
             }
         },
         /**
-         * Get all items of Etk client
+         * @method
+         * @name listAll
+         * @description Get all items of Etk client.
          *
          * @example
          * elastic = require('elasticsearch');
