@@ -112,13 +112,13 @@ test("Verify if the data set is successfully stored for sample set - 2", functio
 
        // Response is in raw form. So application should handle elasticsearch's crappy json format.
        for (var item in resp['hits']['hits']) {
-            t.equal(JSON.stringify(test_array_1[item]), JSON.stringify(resp['hits']['hits'][item]['_source']));
+            t.equal(JSON.stringify(test_array_2[item]), JSON.stringify(resp['hits']['hits'][item]['_source']));
         }
     }
 
     setTimeout(function() {
         // Give elastic search some time to index newly stored data set
-        tk_2.listAll(cb, {"sort": "id", "raw_response": true});
+        tk_2.listAll(cb, {"sort": "id"});
     }, 3000);
 });
 
