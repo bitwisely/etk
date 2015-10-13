@@ -8,10 +8,12 @@ var client = elastic.Client({
     ]
 });
 
+// First test data set is stored in myindex-mytype index/type store
 var client_1 = new Etk(client, {index: "myindex", type: "mytype"});
+// Second test data set is stored in myuser-myname index/type store
+var client_2 = new Etk(client, {index: "myuser", type: "myname"});
 
 /*
-//var client_2 = new etk(client, {index: "myin3dex2", type: "myty3pe2"});
 
 client_1.tk.searchLastDays("foo", 1, 20, function (err, resp) {
     console.log("1");
@@ -40,11 +42,15 @@ client_1.tk.search("foo", 1, function (err, resp) {
 
 */
 
-var test_array= [{foo:1, bar:2, baz: "John", "@timestamp": new Date().toISOString(), "id" : 1},
+var test_array_1= [{foo:1, bar:2, baz: "John", "@timestamp": new Date().toISOString(), "id" : 1},
     {foo:2, bar:4, baz: "Dough", "@timestamp": new Date().toISOString(), "id": 2},
     {foo:0, bar:5, baz: "Jane", "@timestamp": new Date().toISOString(), "id": 3}];
 
-test("Delete data set", function(t) {
+var test_array_2= [{woman:"Mary", "man":"John", "id" : 1},
+    {woman:"Curry", "man":"Tesla", "id" : 2},
+    {woman:"Jane", "man":"Bob", "id" : 3}];
+
+test("Delete data set - 1", function(t) {
     function cb (err, resp) {
         if (err)
             t.fail("ERR: " + JSON.stringify(err));
@@ -57,7 +63,20 @@ test("Delete data set", function(t) {
     t.end();
 });
 
-test("Populate the data set", function(t) {
+test("Delete data set - 2", function(t) {
+    function cb (err, resp) {
+        if (err)
+            t.fail("ERR: " + JSON.stringify(err));
+    }
+    client_2.tk.deleteAll(function(err, resp){
+        if (err) {
+            t.fail("Data set could not be cleared. ERR: " + JSON.stringify(err));
+        }
+    });
+    t.end();
+});
+
+test("Populate the data set - 1", function(t) {
     function cb (err, resp) {
         if (err)
             t.fail("ERR: " + JSON.stringify(err));
@@ -67,12 +86,27 @@ test("Populate the data set", function(t) {
             t.fail("Data set could not be cleared. ERR: " + JSON.stringify(err));
         }
         console.log("Now bulk insert");
-        client_1.tk.bulkInsert(test_array, cb);
+        client_1.tk.bulkInsert(test_array_1, cb);
     });
     t.end();
 });
 
-test("Verify if the data set is successfully stored", function(t) {
+test("Populate the data set - 2", function(t) {
+    function cb (err, resp) {
+        if (err)
+            t.fail("ERR: " + JSON.stringify(err));
+    }
+    client_2.tk.deleteAll(function(err, resp){
+        if (err) {
+            t.fail("Data set could not be cleared. ERR: " + JSON.stringify(err));
+        }
+        console.log("Now bulk insert");
+        client_2.tk.bulkInsert(test_array_2, cb);
+    });
+    t.end();
+});
+
+test("Verify if the data set is successfully stored for set - 1", function(t) {
     t.plan(3);
 
     function cb (err, resp) {
@@ -81,9 +115,9 @@ test("Verify if the data set is successfully stored", function(t) {
         }
 
         //for (var item in resp['hits']['hits']) {
+        console.log(JSON.stringify(resp));
         for (var item in resp) {
-            //t.equal(JSON.stringify(test_array[item]), JSON.stringify(resp['hits']['hits'][item]['_source']));
-            t.equal(JSON.stringify(test_array[item]), JSON.stringify(resp[item]));
+            t.equal(JSON.stringify(test_array_1[item]), JSON.stringify(resp[item]));
         }
     }
 
@@ -103,7 +137,7 @@ test("Verify in raw response mode, if the data set is successfully stored", func
         }
 
        for (var item in resp['hits']['hits']) {
-            t.equal(JSON.stringify(test_array[item]), JSON.stringify(resp['hits']['hits'][item]['_source']));
+            t.equal(JSON.stringify(test_array_1[item]), JSON.stringify(resp['hits']['hits'][item]['_source']));
         }
     }
 

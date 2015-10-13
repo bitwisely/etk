@@ -29,9 +29,10 @@ module.exports = Etk;
  * Default is <strong>@timestamp</strong> which is Logstash compatible. </p>
  */
 function Etk(client, opt) {
-    this.client = client;
-    // Add tk namespace to elastic search object.
-    this.client.tk = this.client.tk || {
+    // Insert elasticsearch with "e" namespace
+    this.e = client;
+    // Insert Etk API with "tk" namespace
+    this.tk = {
         _query : function (query_body, opt) {
             var query = {index: this.index, type: this.type, body: query_body};
             if (opt) {
@@ -122,7 +123,7 @@ function Etk(client, opt) {
          *     ...
          * });
          *
-         * @param data {json} Bulk arbitrary json data
+         * @param data {array} Array of bulk arbitrary json data
          * @param cb {function} Callback function of signature (err, resp)
          */
         bulkInsert: function(data, cb) {
@@ -214,17 +215,14 @@ function Etk(client, opt) {
     };
 
     // Store elastic search client for etk use
-    this.client.tk.client = this.client;
+    this.tk.client = this.e;
 
     // Etk options
-    this.client.tk.index = opt.index || "*";
-    this.client.tk.type = opt.type || "*";
-    this.client.tk.raw_response = opt.raw_response || false;
-    this.client.tk.raw_error = opt.raw_error || false;
-    this.client.tk.insert_time = this.client.tk.insert_time || false;
+    this.tk.index = opt.index || "*";
+    this.tk.type = opt.type || "*";
+    this.tk.raw_response = opt.raw_response || false;
+    this.tk.raw_error = opt.raw_error || false;
+    this.tk.insert_time = opt.insert_time || false;
     // Default time field is Logstash compatible
-    this.client.tk.time_field = opt.time_field || "@timestamp";
-
-    // Return the extended object
-    return this.client;
+    this.tk.time_field = opt.time_field || "@timestamp";
 }

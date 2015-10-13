@@ -12,6 +12,7 @@ Makes life easy with ElasticSearch.
     var client = elastic.Client({hosts: ['localhost:9200']});
 
     client_1 = Etk(client, {index: "my_index", type: "my_type"});
+    
     client_1.tk.search("foo", "bar", function (err, resp) {
         ...
     });
@@ -27,13 +28,12 @@ $ npm install etk
 ## Features
 * Extents the official [elasticsearch](https://github.com/elastic/elasticsearch-js) project with easy to use, well documented function calls.
 * Parses elasticsearch error and response messages in useful ways. Yet you have the option to receive them as they are with configuration options.
-* Etk library is inserted into elasticsearch with "tk" namespace.
 * Uses same elasticsearch instance in multiple Etk clients.
 * All API calls are tested against the latest elasticsearch release.
 * elasticsearch can be used alongside without any change.
 
 ## API Documentation with Examples
-[Site-Link](http://saltukalakus.github.io/etk)
+[Site Link](http://saltukalakus.github.io/etk)
 
 ## People
 
