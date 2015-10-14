@@ -19,7 +19,8 @@ gulp.task('test', function() {
 gulp.task('lint', function () {
     gulp.src('./*.js')
         .pipe(jshint())
-        .pipe(jshint.reporter('default'));
+        .pipe(jshint.reporter('default', { verbose: true }))
+        .pipe(jshint.reporter('fail'));
 });
 
 // Browserify
