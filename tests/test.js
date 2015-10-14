@@ -21,11 +21,14 @@ var tk_2 = new Etk(client, {index: "another_index",
 
 var test_array_1= [{foo:1, bar:2, baz: "John", "@timestamp": new Date().toISOString(), "id" : 1},
     {foo:2, bar:4, baz: "Dough", "@timestamp": new Date().toISOString(), "id": 2},
-    {foo:0, bar:5, baz: "Jane", "@timestamp": new Date().toISOString(), "id": 3}];
+    {foo:0, bar:5, baz: "Jane", "@timestamp": new Date().toISOString(), "id": 3},
+    {foo:1, bar:5, baz: "James", "@timestamp": new Date().toISOString(), "id": 4},
+    {foo:3, bar:6, baz: "Jany", "@timestamp": new Date().toISOString(), "id": 5}];
 
 var test_array_2= [{woman:"Mary", man:"John", "id" : 1},
     {woman:"Curry", man:"Tesla", "id" : 2},
-    {woman:"Jane", man:"Bob", "id" : 3}];
+    {woman:"Jane", man:"Bob", "id" : 3},
+    {foo:1, man:"Bob", "id" : 4}];
 
 test("Delete data set - 1", function(t) {
     function cb (err, resp) {
@@ -84,7 +87,7 @@ test("Populate data set - 2", function(t) {
 });
 
 test("Verify if the data set is successfully stored for sample set - 1", function(t) {
-    t.plan(3);
+    t.plan(5);
 
     function cb (err, resp) {
         if (err) {
@@ -103,7 +106,7 @@ test("Verify if the data set is successfully stored for sample set - 1", functio
 });
 
 test("Verify if the data set is successfully stored for sample set - 2", function(t) {
-    t.plan(3);
+    t.plan(4);
 
     function cb (err, resp) {
         if (err) {
@@ -128,10 +131,11 @@ test("Search the data set with success for set - 1 ", function(t){
         if (err) {
             t.fail("ERR: " + JSON.stringify(err));
         }
+        console.log(JSON.stringify(resp));
     }
 
     setTimeout(function() {
-        //tk_1.search(cb, )
+        tk_1.search("foo", "1", cb);
     }, 3000);
     t.end();
 });

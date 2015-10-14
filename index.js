@@ -68,7 +68,26 @@ function Etk(client, opt) {
             esq.query("query", "filtered", "query", "match", key, value);
             var query_body = esq.getQuery();
             var query = this._query(query_body, opt);
-            this.client.search(query, cb);
+            this.client.search(query, this._searchCb(cb, this));
+        },
+        _searchCb: function (cb, self) {
+            var self = self;
+            return function(err, resp) {
+                if (err) {
+                    cb(err, resp);
+                } else {
+                    if (self.raw_response) {
+                        cb(err, resp);
+                    } else {
+                        // Return only the data as array
+                        var resp_array = [];
+                        for (var item in resp['hits']['hits']) {
+                            resp_array.push(resp['hits']['hits'][item]['_source']);
+                        }
+                        cb(err, resp_array);
+                    }
+                }
+            }
         },
 
         /**
@@ -168,7 +187,7 @@ function Etk(client, opt) {
             return function(err, resp) {
                 if (err && !self.raw_error) {
                     if (err["status"] == "404") {
-                        // If index is not found deleting sould not return error.
+                        // If index is not found deleting should not return error.
                         cb(false, {});
                     } else {
                         cb(err, resp);
@@ -221,6 +240,15 @@ function Etk(client, opt) {
                         cb(err, resp_array);
                     }
                 }
+            }
+        },
+        resp_helpers: {
+            source : function (resp) {
+                var resp_array = [];
+                for (var item in resp['hits']['hits']) {
+                    resp_array.push(resp['hits']['hits'][item]['_source']);
+                }
+                return resp_array;
             }
         }
     };
