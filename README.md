@@ -16,12 +16,22 @@ Makes life easy with ElasticSearch.
     // and type = my_type
     var tk_1 = Etk(client, {index: "my_index", type: "my_type"});
     tk_1.search("foo", "bar", function (err, resp) {
-        ...
+        // Etk inserts "source" method to response, so you can easily get 
+        // the data array found in search
+        console.log(JSON.stringify(resp.source());
+        
+        // Etk inserts "score" method to response, so you can easily get 
+        // the score array found in search
+        console.log(JSON.stringify(resp.score());
+                
+        // elasticsearch original response can be reached from resp.resp 
+        // for further data manipulation for special cases.
+        console.log(JSON.stringify(resp.resp);
     });
 
     // Instance "tk_2" forwards elasticsearch error and response messages
-    // to application. See class documentation for full 
-    // list of Etk options you can configure
+    // to application. See class documentation for full list of options
+    // you can configure
     var tk_2 = Etk(client, {index: "another_index",
                             type: "another_type",
                             raw_response: true,
@@ -30,7 +40,7 @@ Makes life easy with ElasticSearch.
             // Application should handle raw error and response messages
             // received from elasticsearch.
             ...
-        });
+    });
 
 ## Installation
 $ npm install etk

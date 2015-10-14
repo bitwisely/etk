@@ -19,16 +19,20 @@ var tk_2 = new Etk(client, {index: "another_index",
                             raw_response: true,
                             raw_error: false});
 
-var test_array_1= [{foo:1, bar:2, baz: "John", "@timestamp": new Date().toISOString(), "id" : 1},
+var test_array_1= [
+    {foo:1, bar:2, baz: "John", "@timestamp": new Date().toISOString(), "id" : 1},
     {foo:2, bar:4, baz: "Dough", "@timestamp": new Date().toISOString(), "id": 2},
     {foo:0, bar:5, baz: "Jane", "@timestamp": new Date().toISOString(), "id": 3},
     {foo:1, bar:5, baz: "James", "@timestamp": new Date().toISOString(), "id": 4},
-    {foo:3, bar:6, baz: "Jany", "@timestamp": new Date().toISOString(), "id": 5}];
+    {foo:3, bar:6, baz: "Jany", "@timestamp": new Date().toISOString(), "id": 5}
+];
 
-var test_array_2= [{woman:"Mary", man:"John", "id" : 1},
+var test_array_2= [
+    {woman:"Mary", man:"John", "id" : 1},
     {woman:"Curry", man:"Tesla", "id" : 2},
     {woman:"Jane", man:"Bob", "id" : 3},
-    {foo:1, man:"Bob", "id" : 4}];
+    {foo:1, man:"Bob", "id" : 4}
+];
 
 test("Delete data set - 1", function(t) {
     function cb (err, resp) {
@@ -131,11 +135,35 @@ test("Search the data set with success for set - 1 ", function(t){
         if (err) {
             t.fail("ERR: " + JSON.stringify(err));
         }
-        console.log(JSON.stringify(resp));
+
+        var expected_source = [
+            {foo:1,bar:2,baz:"John", id:1},
+            {foo:1,bar:5,baz:"James",id:4}
+        ];
+
+        // Check item count matches
+        t.equal(expected_source.length, resp.hits());
+
+        // Check for each item that we received the data correctly
+        var response_source = resp.source();
+        for (var i in response_source) {
+            // Skip time field only
+            t.equal(expected_source[i].foo, response_source[i].foo);
+            t.equal(expected_source[i].bar, response_source[i].bar);
+            t.equal(expected_source[i].baz, response_source[i].baz);
+            t.equal(expected_source[i].id, response_source[i].id);
+        }
+
+        // Check score (when sort is enabled score appears to be null)
+        var expected_score = [null, null];
+        var response_score = resp.score();
+        for (var j in response_score) {
+            t.equal(expected_score[j], response_score[j]);
+        }
     }
 
     setTimeout(function() {
-        tk_1.search("foo", "1", cb);
+        tk_1.search("foo", "1", cb, {"sort":"id"});
     }, 3000);
     t.end();
 });
@@ -151,23 +179,8 @@ test("Search should find only in defined index-type pair", function(t){
  console.log(JSON.stringify(resp));
  });
 
- tk_1.search("foo", 1, function (err, resp) {
- console.log("2");
- console.log(JSON.stringify(resp));
- });
-
  tk_2.searchLastDays("foo", 1, 20, function (err, resp) {
  console.log("3");
- console.log(JSON.stringify(resp));
- });
-
- tk_2.search("foo", 1, function (err, resp) {
- console.log("4");
- console.log(JSON.stringify(resp));
- });
-
- tk_1.search("foo", 1, function (err, resp) {
- console.log("5");
  console.log(JSON.stringify(resp));
  });
 

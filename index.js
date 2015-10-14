@@ -79,12 +79,13 @@ function Etk(client, opt) {
                     if (self.raw_response) {
                         cb(err, resp);
                     } else {
-                        // Return only the data as array
-                        var resp_array = [];
-                        for (var item in resp['hits']['hits']) {
-                            resp_array.push(resp['hits']['hits'][item]['_source']);
-                        }
-                        cb(err, resp_array);
+                        var response = {};
+                        // Store original response in resp
+                        response.resp = resp;
+                        // Response helper functions are merged into response
+                        _.merge(response, self.resp_helpers);
+                        // Pass the response to callback
+                        cb(err, response);
                     }
                 }
             }
@@ -243,12 +244,46 @@ function Etk(client, opt) {
             }
         },
         resp_helpers: {
-            source : function (resp) {
+            source : function () {
                 var resp_array = [];
-                for (var item in resp['hits']['hits']) {
-                    resp_array.push(resp['hits']['hits'][item]['_source']);
+                for (var item in this.resp['hits']['hits']) {
+                    resp_array.push(this.resp['hits']['hits'][item]['_source']);
                 }
                 return resp_array;
+            },
+            score : function () {
+                var resp_array = [];
+                for (var item in this.resp['hits']['hits']) {
+                    resp_array.push(this.resp['hits']['hits'][item]['_score']);
+                }
+                return resp_array;
+            },
+            index : function () {
+                var resp_array = [];
+                for (var item in this.resp['hits']['hits']) {
+                    resp_array.push(this.resp['hits']['hits'][item]['_index']);
+                }
+                return resp_array;
+            },
+            type : function () {
+                var resp_array = [];
+                for (var item in this.resp['hits']['hits']) {
+                    resp_array.push(this.resp['hits']['hits'][item]['_type']);
+                }
+                return resp_array;
+            },
+            id : function () {
+                var resp_array = [];
+                for (var item in this.resp['hits']['hits']) {
+                    resp_array.push(this.resp['hits']['hits'][item]['_id']);
+                }
+                return resp_array;
+            },
+            hits : function () {
+                return this.resp['hits']['total'];
+            },
+            maxScore : function () {
+                return this.resp['hits']['max_score'];
             }
         }
     };
