@@ -8,16 +8,23 @@ var client = elastic.Client({
     ]
 });
 
-// First test data set is stored in myindex-mytype index/type store
+// "tk-1" works on myindex/mytype sample store
 var tk_1 = new Etk(client, {index: "myindex", type: "mytype"});
 
-// Second test data set is stored in myuser-myname index/type store
-// In this set etk instance passes elasticsearch error and response messages
-// untouched
+// "tk-2" works on another_index/another_type sample store
+// while error and response messages form elasticsearch forwarded
+// directly to application.
 var tk_2 = new Etk(client, {index: "another_index",
                             type: "another_type",
                             raw_response: true,
                             raw_error: false});
+
+// "tk-3" works with default Etk configurations.
+// index        = All index fields "*"
+// type         = All type fields "*"
+// raw_response = Disabled
+// raw_error    = Disabled
+var tk_3 = new Etk(client);
 
 var test_array_1= [
     {foo:1, bar:2, baz: "John", "@timestamp": new Date().toISOString(), "id" : 1},
@@ -145,7 +152,6 @@ test("Search the data set with success", function(t){
         ];
 
         // Check item count matches
-        console.log(JSON.stringify(resp.resp));
         t.equal(resp.hits(), expected_source.length);
 
         // Check for each item that we received the data correctly
@@ -176,12 +182,10 @@ test("Search should return empty object when no result is found.", function(t){
             t.fail("ERR: " + JSON.stringify(err));
         }
 
-        console.log(JSON.stringify(resp.resp));
-
         var expected_source = [];
 
         // Check item count matches
-        t.equal(resp.hits(), expected_source.length, "item count does not match");
+        t.equal(resp.hits(), expected_source.length);
 
         // Check for each item that we received the data correctly
         var response_source = resp.source();
@@ -205,21 +209,44 @@ test("Search should return empty object when no result is found.", function(t){
     t.end();
 });
 
+test("Search all fields with success", function(t){
+    function cb(err, resp) {
+        if (err) {
+            t.fail("ERR: " + JSON.stringify(err));
+        }
+        console.log(JSON.stringify(resp.resp));
+        t.pass("search all fields with success");
+    };
 
-test("Search should find only in defined index-type pair", function(t){
+    tk_3.search("foo", "1", cb);
     t.end();
 });
 
-/*
+test("Search all fields with no result found", function(t){
+    function cb(err, resp) {
+        if (err) {
+            t.fail("ERR: " + JSON.stringify(err));
+        }
+        console.log(JSON.stringify(resp.resp));
+        t.pass("Search all fields with no result found");
+    };
 
- tk_1.searchLastDays("foo", 1, 20, function (err, resp) {
- console.log("1");
- console.log(JSON.stringify(resp));
- });
+    tk_3.search("fuzz", "1", cb);
+    t.end();
+});
 
- tk_2.searchLastDays("foo", 1, 20, function (err, resp) {
- console.log("3");
- console.log(JSON.stringify(resp));
- });
 
- */
+test("Search last selected days", function(t) {
+    function cb(err, resp) {
+        if (err) {
+            t.fail("ERR: " + JSON.stringify(err));
+        }
+        console.log(JSON.stringify(resp.resp));
+        t.pass("Search last selected days");
+    };
+
+    // Search last 2 days for "bar":"5"
+    tk_1.searchLastDays("bar", "5", 2, cb);
+    t.end();
+});
+

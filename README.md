@@ -52,7 +52,7 @@ Makes life easy with ElasticSearch.
 $ npm install etk
 
 ## Features
-* Provides high level, easy to use interface to use Elastic Search in your Node.js & Io.js project.
+* Provides high level, easy to use interface for Elastic Search in your Node.js project.
 * Etk extents the official [elasticsearch](https://github.com/elastic/elasticsearch-js) project with well documented function calls.
 * Parses [elasticsearch](https://github.com/elastic/elasticsearch-js) error and response messages in useful ways. Yet you have the option to receive them as they are with configuration options.
 * Uses same [elasticsearch](https://github.com/elastic/elasticsearch-js) instance in multiple Etk clients.
@@ -60,7 +60,12 @@ $ npm install etk
 * [Elasticsearch](https://github.com/elastic/elasticsearch-js) can be used alongside with Etk without any code change.
 
 ## API Documentation with Examples
-[Project site](http://saltukalakus.github.io/etk) documents the latest Npm release.
+[Project site](http://saltukalakus.github.io/etk) documents the latest NPM release.
+
+## TODO
+* Currently project covers a very small subset of possible function calls. Please extend the library and open a pull request for merge.
+* Promise support is missing. Only callback mechanism is implemented.
+* Browser support is not available yet.
 
 ## People
 

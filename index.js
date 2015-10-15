@@ -24,9 +24,6 @@ module.exports = Etk;
  * <strong>type</strong>: {string} Type which Etk operated on. Default is <strong>search all</strong> </p>
  * <strong>raw_response</strong>: {bool} Returns elasticsearch response object without any modification. Default is <strong>false</strong>. </p>
  * <strong>raw_error</strong>: {bool} Returns elasticsearch error object without any modification. Default is <strong>false</strong>. </p>
- * <strong>insert_time</strong>: {bool} Inserts time field for every stored object to elasticsearch. Default is <strong>false</strong>. </p>
- * <strong>time_field</strong>: {string} Timestamp name which is auto inserted to all stored fields.
- * Default is <strong>@timestamp</strong> which is Logstash compatible. </p>
  */
 function Etk(client, opt) {
     // Store elasticsearch for internal use.
@@ -272,14 +269,10 @@ function Etk(client, opt) {
     this.tk.client = this.e;
 
     // Etk options
-    this.tk.index = opt.index || "*";
-    this.tk.type = opt.type || "*";
-    this.tk.raw_response = opt.raw_response || false;
-    this.tk.raw_error = opt.raw_error || false;
-    this.tk.insert_time = opt.insert_time || false;
-
-    // Default time field is Logstash compatible
-    this.tk.time_field = opt.time_field || "@timestamp";
+    this.tk.index = opt && opt.index || "*";
+    this.tk.type = opt && opt.type || "*";
+    this.tk.raw_response = opt && opt.raw_response || false;
+    this.tk.raw_error = opt && opt.raw_error || false;
 
     return this.tk;
 }
