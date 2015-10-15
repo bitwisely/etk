@@ -1,6 +1,5 @@
-
-Esq = require('esq');
-_ = require('lodash');
+var Esq = require('esq');
+var _ = require('lodash');
 
 module.exports = Etk;
 
@@ -70,8 +69,8 @@ function Etk(client, opt) {
             var query = this._query(query_body, opt);
             this.client.search(query, this._searchCb(cb, this));
         },
-        _searchCb: function (cb, self) {
-            var self = self;
+        _searchCb: function (cb, selfie) {
+            var self = selfie;
             return function(err, resp) {
                 if (err) {
                     cb(err, resp);
@@ -88,7 +87,7 @@ function Etk(client, opt) {
                         cb(err, response);
                     }
                 }
-            }
+            };
         },
 
         /**
@@ -183,11 +182,11 @@ function Etk(client, opt) {
             var query = this._query(query_body, opt);
             this.client.deleteByQuery(query, this._deleteAllCb(cb, this));
         },
-        _deleteAllCb: function (cb, self) {
-            var self = self;
+        _deleteAllCb: function (cb, selfie) {
+            var self = selfie;
             return function(err, resp) {
                 if (err && !self.raw_error) {
-                    if (err["status"] == "404") {
+                    if (err.status == "404") {
                         // If index is not found deleting should not return error.
                         cb(false, {});
                     } else {
@@ -196,7 +195,7 @@ function Etk(client, opt) {
                 } else {
                     cb(err, resp);
                 }
-            }
+            };
         },
         /**
          * @method
@@ -224,8 +223,8 @@ function Etk(client, opt) {
             var query = this._query(query_body, opt);
             this.client.search(query, this._listAllCb(cb, this));
         },
-        _listAllCb: function (cb, self) {
-            var self = self;
+        _listAllCb: function (cb, selfie) {
+            var self = selfie;
             return function(err, resp) {
                 if (err) {
                     cb(err, resp);
@@ -235,55 +234,55 @@ function Etk(client, opt) {
                     } else {
                         // Return only the data as array
                         var resp_array = [];
-                        for (var item in resp['hits']['hits']) {
-                            resp_array.push(resp['hits']['hits'][item]['_source']);
+                        for (var item in resp.hits.hits) {
+                            resp_array.push(resp.hits.hits[item]._source);
                         }
                         cb(err, resp_array);
                     }
                 }
-            }
+            };
         },
         resp_helpers: {
             source : function () {
                 var resp_array = [];
-                for (var item in this.resp['hits']['hits']) {
-                    resp_array.push(this.resp['hits']['hits'][item]['_source']);
+                for (var item in this.resp.hits.hits) {
+                    resp_array.push(this.resp.hits.hits[item]._source);
                 }
                 return resp_array;
             },
             score : function () {
                 var resp_array = [];
-                for (var item in this.resp['hits']['hits']) {
-                    resp_array.push(this.resp['hits']['hits'][item]['_score']);
+                for (var item in this.resp.hits.hits) {
+                    resp_array.push(this.resp.hits.hits[item]._score);
                 }
                 return resp_array;
             },
             index : function () {
                 var resp_array = [];
-                for (var item in this.resp['hits']['hits']) {
-                    resp_array.push(this.resp['hits']['hits'][item]['_index']);
+                for (var item in this.resp.hits.hits) {
+                    resp_array.push(this.resp.hits.hits[item]._index);
                 }
                 return resp_array;
             },
             type : function () {
                 var resp_array = [];
-                for (var item in this.resp['hits']['hits']) {
-                    resp_array.push(this.resp['hits']['hits'][item]['_type']);
+                for (var item in this.resp.hits.hits) {
+                    resp_array.push(this.resp.hits.hits[item]._type);
                 }
                 return resp_array;
             },
             id : function () {
                 var resp_array = [];
-                for (var item in this.resp['hits']['hits']) {
-                    resp_array.push(this.resp['hits']['hits'][item]['_id']);
+                for (var item in this.resp.hits.hits) {
+                    resp_array.push(this.resp.hits.hits[item]._id);
                 }
                 return resp_array;
             },
             hits : function () {
-                return this.resp['hits']['total'];
+                return this.resp.hits.total;
             },
             maxScore : function () {
-                return this.resp['hits']['max_score'];
+                return this.resp.hits.max_score;
             }
         }
     };
