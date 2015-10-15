@@ -69,7 +69,6 @@ test("Populate data set - 1", function(t) {
         if (err) {
             t.fail("Data set could not be cleared. ERR: " + JSON.stringify(err));
         }
-        console.log("Now bulk insert");
         tk_1.bulkInsert(test_array_1, cb);
     });
     t.end();
@@ -84,7 +83,6 @@ test("Populate data set - 2", function(t) {
         if (err) {
             t.fail("Data set could not be cleared. ERR: " + JSON.stringify(err));
         }
-        console.log("Now bulk insert");
         tk_2.bulkInsert(test_array_2, cb);
     });
     t.end();
@@ -99,10 +97,10 @@ test("Verify data set - 1", function(t) {
         var response_source = resp.source();
         for (var i in response_source) {
             // Skip time field only
-            t.equal(test_array_1[i].foo, response_source[i].foo);
-            t.equal(test_array_1[i].bar, response_source[i].bar);
-            t.equal(test_array_1[i].baz, response_source[i].baz);
-            t.equal(test_array_1[i].id, response_source[i].id);
+            t.equal(response_source[i].foo, test_array_1[i].foo);
+            t.equal(response_source[i].bar, test_array_1[i].bar);
+            t.equal(response_source[i].baz, test_array_1[i].baz);
+            t.equal(response_source[i].id, test_array_1[i].id);
         }
     }
 
@@ -124,7 +122,7 @@ test("Verify data set - 2", function(t) {
 
        // Response is in raw form. So application should handle elasticsearch's crappy json format.
        for (var item in resp['hits']['hits']) {
-            t.equal(JSON.stringify(test_array_2[item]), JSON.stringify(resp['hits']['hits'][item]['_source']));
+            t.equal(JSON.stringify(resp['hits']['hits'][item]['_source']), JSON.stringify(test_array_2[item]));
         }
     }
 
@@ -147,33 +145,63 @@ test("Search the data set with success", function(t){
         ];
 
         // Check item count matches
-        t.equal(expected_source.length, resp.hits());
+        console.log(JSON.stringify(resp.resp));
+        t.equal(resp.hits(), expected_source.length);
 
         // Check for each item that we received the data correctly
         var response_source = resp.source();
         for (var i in response_source) {
             // Skip time field only
-            t.equal(expected_source[i].foo, response_source[i].foo);
-            t.equal(expected_source[i].bar, response_source[i].bar);
-            t.equal(expected_source[i].baz, response_source[i].baz);
-            t.equal(expected_source[i].id, response_source[i].id);
+            t.equal(response_source[i].foo, expected_source[i].foo);
+            t.equal(response_source[i].bar, expected_source[i].bar);
+            t.equal(response_source[i].baz, expected_source[i].baz);
+            t.equal(response_source[i].id, expected_source[i].id);
         }
 
         // Check score (when sort is enabled score appears to be null)
         var expected_score = [null, null];
         var response_score = resp.score();
         for (var j in response_score) {
-            t.equal(expected_score[j], response_score[j]);
+            t.equal(response_score[j], expected_score[j]);
         }
     }
 
-    setTimeout(function() {
-        tk_1.search("foo", "1", cb, {"sort":"id"});
-    }, 3000);
+    tk_1.search("foo", "1", cb, {"sort":"id"});
     t.end();
 });
 
 test("Search should return empty object when no result is found.", function(t){
+    function cb(err, resp) {
+        if (err) {
+            t.fail("ERR: " + JSON.stringify(err));
+        }
+
+        console.log(JSON.stringify(resp.resp));
+
+        var expected_source = [];
+
+        // Check item count matches
+        t.equal(resp.hits(), expected_source.length, "item count does not match");
+
+        // Check for each item that we received the data correctly
+        var response_source = resp.source();
+        for (var i in response_source) {
+            // Skip time field only
+            t.equal(response_source[i].foo, expected_source[i].foo);
+            t.equal(response_source[i].bar, expected_source[i].bar);
+            t.equal(response_source[i].baz, expected_source[i].baz);
+            t.equal(response_source[i].id, expected_source[i].id);
+        }
+
+        // Check score (when sort is enabled score appears to be null)
+        var expected_score = [null];
+        var response_score = resp.score();
+        for (var j in response_score) {
+            t.equal(response_score[j], expected_score[j]);
+        }
+    }
+
+    tk_1.search("fuzz", "1", cb);
     t.end();
 });
 

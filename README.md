@@ -9,18 +9,21 @@ Makes life easy with ElasticSearch.
     elastic = require('elasticsearch');
     Etk = require('etk');
 
-    // Elasticsearch instance is initialized with some common options
+    // Elasticsearch instance is initialized as documented at it's
+    // project space
     var client = elastic.Client({hosts: ['localhost:9200']});
 
-    // Instance "tk_1" makes Elasticsearch searches against index = my_index
-    // and type = my_type
+    // Etk instance "tk_1" calls against index = my_index and type = my_type
     var tk_1 = Etk(client, {index: "my_index", type: "my_type"});
+
+    // search Etk API call returns back the search result
     tk_1.search("foo", "bar", function (err, resp) {
-        // Etk inserts "source" method to response, so you can easily get 
+
+        // Etk inserts "source()" method to response, so you can easily get 
         // the data array found in search
         console.log(JSON.stringify(resp.source());
         
-        // Etk inserts "score" method to response, so you can easily get 
+        // Etk inserts "score()" method to response, so you can easily get 
         // the score array found in search
         console.log(JSON.stringify(resp.score());
                 
@@ -29,14 +32,17 @@ Makes life easy with ElasticSearch.
         console.log(JSON.stringify(resp.resp);
     });
 
-    // Instance "tk_2" forwards elasticsearch error and response messages
+    // Etk instance "tk_2" forwards elasticsearch error and response messages
     // to application. See class documentation for full list of options
     // you can configure
     var tk_2 = Etk(client, {index: "another_index",
                             type: "another_type",
                             raw_response: true,
                             raw_error: true});
+
+    // search Etk API call returns back the search result
     tk_2.search("baz", "bar", function (err, resp) {
+
             // Application should handle raw error and response messages
             // received from elasticsearch.
             ...
@@ -54,7 +60,7 @@ $ npm install etk
 * [Elasticsearch](https://github.com/elastic/elasticsearch-js) can be used alongside with Etk without any code change.
 
 ## API Documentation with Examples
-[Site Link](http://saltukalakus.github.io/etk)
+[Project site](http://saltukalakus.github.io/etk) documents the latest Npm release.
 
 ## People
 

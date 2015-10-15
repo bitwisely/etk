@@ -91,15 +91,6 @@ function Etk(client, opt) {
             var query = this._query(query_body, opt);
             this.client.search(query, this._genericCb(cb, this));
         },
-        // Helper to pack json array compatible with ElasticSearch bulk array format
-        _bulkArray: function(data) {
-            var bulk_formed = [];
-            for (var i = 0, len = data.length; i < len; i++) {
-                bulk_formed.push({index: {_index:this.index, _type: this.type}});
-                bulk_formed.push(data[i]);
-            }
-            return bulk_formed;
-        },
         /**
          * @method
          * @name bulkInsert
@@ -127,6 +118,15 @@ function Etk(client, opt) {
             this.client.bulk({
                 body: bulk_body
             }, cb);
+        },
+        // Helper to pack json array compatible with ElasticSearch bulk array format
+        _bulkArray: function(data) {
+            var bulk_formed = [];
+            for (var i = 0, len = data.length; i < len; i++) {
+                bulk_formed.push({index: {_index:this.index, _type: this.type}});
+                bulk_formed.push(data[i]);
+            }
+            return bulk_formed;
         },
         /**
          * @method
