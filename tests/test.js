@@ -90,16 +90,19 @@ test("Populate data set - 2", function(t) {
     t.end();
 });
 
-test("Verify if the data set is successfully stored for sample set - 1", function(t) {
-    t.plan(5);
-
+test("Verify data set - 1", function(t) {
     function cb (err, resp) {
         if (err) {
             t.fail("ERR: " + JSON.stringify(err));
         }
 
-        for (var item in resp) {
-            t.equal(JSON.stringify(test_array_1[item]), JSON.stringify(resp[item]));
+        var response_source = resp.source();
+        for (var i in response_source) {
+            // Skip time field only
+            t.equal(test_array_1[i].foo, response_source[i].foo);
+            t.equal(test_array_1[i].bar, response_source[i].bar);
+            t.equal(test_array_1[i].baz, response_source[i].baz);
+            t.equal(test_array_1[i].id, response_source[i].id);
         }
     }
 
@@ -107,9 +110,11 @@ test("Verify if the data set is successfully stored for sample set - 1", functio
         // Give elastic search some time to index newly stored data set
         tk_1.listAll(cb, {"sort": "id"});
     }, 3000);
+
+    t.end();
 });
 
-test("Verify if the data set is successfully stored for sample set - 2", function(t) {
+test("Verify data set - 2", function(t) {
     t.plan(4);
 
     function cb (err, resp) {
@@ -130,7 +135,7 @@ test("Verify if the data set is successfully stored for sample set - 2", functio
 });
 
 
-test("Search the data set with success for set - 1 ", function(t){
+test("Search the data set with success", function(t){
     function cb(err, resp) {
         if (err) {
             t.fail("ERR: " + JSON.stringify(err));
@@ -167,6 +172,11 @@ test("Search the data set with success for set - 1 ", function(t){
     }, 3000);
     t.end();
 });
+
+test("Search should return empty object when no result is found.", function(t){
+    t.end();
+});
+
 
 test("Search should find only in defined index-type pair", function(t){
     t.end();

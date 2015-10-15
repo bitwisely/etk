@@ -29,18 +29,9 @@ module.exports = Etk;
  * Default is <strong>@timestamp</strong> which is Logstash compatible. </p>
  */
 function Etk(client, opt) {
-    // Insert elasticsearch with "e" namespace
+    // Store elasticsearch for internal use.
     this.e = client;
-    // Insert Etk API with "tk" namespace
     this.tk = {
-        _query : function (query_body, opt) {
-            var query = {index: this.index, type: this.type, body: query_body};
-            if (opt) {
-                _.merge(query, opt);
-            }
-            return query;
-        },
-
         /**
          * @method
          * @name search
@@ -67,29 +58,8 @@ function Etk(client, opt) {
             esq.query("query", "filtered", "query", "match", key, value);
             var query_body = esq.getQuery();
             var query = this._query(query_body, opt);
-            this.client.search(query, this._searchCb(cb, this));
+            this.client.search(query, this._genericCb(cb, this));
         },
-        _searchCb: function (cb, selfie) {
-            var self = selfie;
-            return function(err, resp) {
-                if (err) {
-                    cb(err, resp);
-                } else {
-                    if (self.raw_response) {
-                        cb(err, resp);
-                    } else {
-                        var response = {};
-                        // Store original response in resp
-                        response.resp = resp;
-                        // Response helper functions are merged into response
-                        _.merge(response, self.resp_helpers);
-                        // Pass the response to callback
-                        cb(err, response);
-                    }
-                }
-            };
-        },
-
         /**
          * @method
          * @name searchLastDays
@@ -119,9 +89,9 @@ function Etk(client, opt) {
             esq.query("query", "filtered", "filter", "range", this.time_field, "gte", search_days);
             var query_body = esq.getQuery();
             var query = this._query(query_body, opt);
-            this.client.search(query, cb);
+            this.client.search(query, this._genericCb(cb, this));
         },
-        // Helper function to pack json array compatible with ElasticSearch bulk array format
+        // Helper to pack json array compatible with ElasticSearch bulk array format
         _bulkArray: function(data) {
             var bulk_formed = [];
             for (var i = 0, len = data.length; i < len; i++) {
@@ -221,27 +191,9 @@ function Etk(client, opt) {
             esq.query("query", "filtered", "query", "match_all", "", "");
             var query_body = esq.getQuery();
             var query = this._query(query_body, opt);
-            this.client.search(query, this._listAllCb(cb, this));
+            this.client.search(query, this._genericCb(cb, this));
         },
-        _listAllCb: function (cb, selfie) {
-            var self = selfie;
-            return function(err, resp) {
-                if (err) {
-                    cb(err, resp);
-                } else {
-                    if (self.raw_response) {
-                        cb(err, resp);
-                    } else {
-                        // Return only the data as array
-                        var resp_array = [];
-                        for (var item in resp.hits.hits) {
-                            resp_array.push(resp.hits.hits[item]._source);
-                        }
-                        cb(err, resp_array);
-                    }
-                }
-            };
-        },
+        // TODO: I need to document below functions as they are used in public API
         resp_helpers: {
             source : function () {
                 var resp_array = [];
@@ -284,10 +236,39 @@ function Etk(client, opt) {
             maxScore : function () {
                 return this.resp.hits.max_score;
             }
+        },
+        // This callback should fit in most of the API calls.
+        _genericCb: function (cb, selfie) {
+            var self = selfie;
+            return function(err, resp) {
+                if (err) {
+                    cb(err, resp);
+                } else {
+                    if (self.raw_response) {
+                        cb(err, resp);
+                    } else {
+                        var response = {};
+                        // Store original response in resp
+                        response.resp = resp;
+                        // Response helper functions are merged into response
+                        _.merge(response, self.resp_helpers);
+                        // Pass the response to callback
+                        cb(err, response);
+                    }
+                }
+            };
+        },
+        // Pack the final query params sent to elasticsearch with optional member options.
+        _query : function (query_body, opt) {
+            var query = {index: this.index, type: this.type, body: query_body};
+            if (opt) {
+                _.merge(query, opt);
+            }
+            return query;
         }
     };
 
-    // Store elastic search client for etk use
+    // Store elastic search client for Etk use
     this.tk.client = this.e;
 
     // Etk options
@@ -296,6 +277,7 @@ function Etk(client, opt) {
     this.tk.raw_response = opt.raw_response || false;
     this.tk.raw_error = opt.raw_error || false;
     this.tk.insert_time = opt.insert_time || false;
+
     // Default time field is Logstash compatible
     this.tk.time_field = opt.time_field || "@timestamp";
 
