@@ -6,6 +6,7 @@ Makes life easy with ElasticSearch.
 [![Dependency Status][david-dm-dev-image]][david-dm-dev-url]
 [![devDependency Status][david-dm-devDep-image]][david-dm-devDep-url]
 
+```javascript
     elastic = require('elasticsearch');
     Etk = require('etk');
 
@@ -47,6 +48,7 @@ Makes life easy with ElasticSearch.
             // received from elasticsearch.
             ...
     });
+```
 
 ## Installation
 $ npm install etk
@@ -60,7 +62,7 @@ $ npm install etk
 * [Elasticsearch](https://github.com/elastic/elasticsearch-js) can be used alongside with Etk without any code change.
 
 ## API Documentation with Examples
-[Project site](http://saltukalakus.github.io/etk) documents the latest NPM release.
+[Project site](http://bitwisely.github.io/etk) documents the latest NPM release.
 
 ## TODO
 * Currently project covers a very small subset of possible function calls. Please extend the library and open a pull request for merge.
@@ -68,13 +70,10 @@ $ npm install etk
 * Browser support is not available yet.
 
 ## People
+[R. Saltuk Alakus](https://github.com/saltukalakus)
 
-Original author of Etk is [R. Saltuk Alakus](https://github.com/saltukalakus)
-
-Looking for maintainers. Please drop me an email at saltukalakus@gmail.com
 
 ## License
-
 [MIT](LICENSE)
 
 [travis-image]: https://travis-ci.org/saltukalakus/etk.svg?branch=master
